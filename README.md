@@ -3,6 +3,21 @@
 작성일: 2026-09-19 KST. 가칭이며 상표·도메인 사용 가능성은 검증하지 않았다.
 현재 상태: 설계/공통 계약/작업 분할 준비. 앱 구현, 스폰서 실호출, 배포 완료를 뜻하지 않는다.
 
+
+## 3분 데모 실행법 (심사용, 가장 먼저 읽을 것)
+
+```bash
+cd backend && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+cp .env.example .env            # DAYTONA_API_KEY, NOSANA_API_KEY 채우기
+set -a; source .env; set +a
+export TRENDPILOT_LIVE_PROVIDERS=0     # 리플레이 모드: 전략은 fixture(라벨 MOCK/REPLAY), Daytona 분석·렌더는 실제
+.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8317
+# 브라우저: http://127.0.0.1:8317/   (빌드 없는 단일 HTML UI)
+```
+
+`TRENDPILOT_LIVE_PROVIDERS` 를 지우면 Nosana 호스티드 추론(`inference.nosana.com`, `qwen/qwen3.8-27b`)으로 plan/recommend를 실제 호출한다.
+React 프런트(`frontend/`, 5317, `/api`·`/p` 프록시)는 같은 API를 쓰는 두 번째 화면이다. 실제 실행 영수증·산출물 SHA-256 표는 `backend/HANDOFF.md`.
+
 ## 제품 정의
 
 **트렌드를 나열하는 챗봇이 아니라, 공개 콘텐츠 근거와 내 계정의 변화를 바탕으로 다음 콘텐츠 실험 3개를 설계하고, 실제 촬영만 제외한 제작 준비물을 완성하는 Personal SNS Growth Production Agent.**
