@@ -1,0 +1,87 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>TrendPilot</title>
+<style>
+@page { size: 1280px 720px; margin: 0; }
+body { margin:0; font-family:"Noto Sans CJK KR","Noto Sans KR",DejaVu Sans,sans-serif; color:#e8eaf6; }
+.s { width:1280px; height:720px; box-sizing:border-box; padding:64px 84px; page-break-after:always; position:relative; background:#0f1230; overflow:hidden; }
+.s:last-child { page-break-after:auto; }
+.lbl { font-size:13px; letter-spacing:3px; color:#7c83c9; font-weight:700; margin-bottom:14px; }
+h1 { font-size:58px; margin:0 0 10px; color:#fff; letter-spacing:-1px; }
+h2 { font-size:34px; margin:0 0 6px; color:#fff; }
+.en { display:block; color:#9aa0d8; font-weight:500; font-size:0.6em; margin-top:4px; }
+p, li { font-size:20px; line-height:1.5; color:#d5d8f0; }
+p .en, li .en { font-size:15px; color:#8b91c9; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:26px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-top:26px; }
+.card { background:#181c48; border:1px solid #2b3070; border-radius:16px; padding:22px 24px; }
+.card h3 { margin:0 0 8px; font-size:22px; color:#ffd166; }
+.card p { font-size:17px; margin:0; }
+.card p .en { font-size:13.5px; }
+.accent { color:#ffd166; }
+.foot { position:absolute; bottom:30px; left:84px; right:84px; display:flex; justify-content:space-between; font-size:13px; color:#6c72b3; }
+.chain { font-family:DejaVu Sans Mono,monospace; font-size:16px; background:#181c48; border-radius:14px; padding:18px 22px; color:#cfd3f7; line-height:1.55; margin-top:18px; white-space:pre; border:1px solid #2b3070; }
+.pill { display:inline-block; background:#ffd166; color:#0f1230; font-weight:700; font-size:13px; padding:4px 12px; border-radius:999px; margin-right:8px; }
+.num { font-size:64px; font-weight:800; color:#ffd166; line-height:1; margin:6px 0 8px; }
+</style></head><body>
+
+<div class="s">
+  <div class="lbl">DAYTONA HACKSPRINT SEOUL · 2026-09-19</div>
+  <h1>TrendPilot</h1>
+  <h2>내 계정 데이터로 다음 콘텐츠 3개를 정하고, 촬영만 빼고 제작 준비를 끝내는 에이전트<span class="en">A Personal SNS Growth Production Agent: picks your next 3 contents from your own data and finishes every production step except the shoot</span></h2>
+  <p style="margin-top:26px">트렌드 챗봇이 아니다. 공개 콘텐츠 관측 근거 + 내 팔로워 변화 → SAFE BET / GROWTH EXPERIMENT 3개 → 대본·촬영 리스트·편집 가이드·썸네일·게시 패키지까지 실제 파일로.<span class="en">Not a trend chatbot. Public content evidence + your follower delta → 3 actions (safe bet / growth experiment) → script, shot list, editing guide, thumbnail plan, publishing package as real files.</span></p>
+  <p><span class="pill">Daytona</span><span class="pill">Nosana</span><span class="pill">DNSimple</span></p>
+  <div class="foot"><span>Team sanghyun747 · contract 1.1.0</span><span>github.com/sanghyun747/aiaiiai</span></div>
+</div>
+
+<div class="s">
+  <div class="lbl">PROBLEM</div>
+  <h2>"뭐가 유행이냐"가 아니라 "내가 다음에 뭘 찍어야 하냐"<span class="en">Creators don't need "what's trending"; they need "what should I shoot next, and why"</span></h2>
+  <div class="grid">
+    <div class="card"><h3>1인 크리에이터의 병목<span class="en">The solo creator's bottleneck</span></h3><p>아이디어가 아니라 제작 준비. 대본·장면·편집·썸네일·게시 문구를 매번 처음부터.<span class="en">Not ideas — production prep: script, scenes, edit plan, thumbnail, captions from scratch every time.</span></p></div>
+    <div class="card"><h3>팔로워 변화는 오해투성이<span class="en">Follower deltas are misread</span></h3><p>단순 old−current 차이를 "언팔"로 착각. 계정명 변경·기간 밖·미확인을 분리해야 한다.<span class="en">Raw old−current is not "unfollowed": renames, outside-window and unresolved must be separated.</span></p></div>
+    <div class="card"><h3>근거 없는 추천<span class="en">Ungrounded advice</span></h3><p>URL·관측 시각·실제 수치 없는 트렌드 조언은 검증 불가.<span class="en">Trend advice without URL, observed_at and real numbers cannot be checked.</span></p></div>
+    <div class="card"><h3>가짜 완성<span class="en">Fake completeness</span></h3><p>"영상을 자동 편집했다"는 주장 대신, 촬영만 빼고 실제로 쓸 수 있는 제작 패키지.<span class="en">No "we auto-edited your video" claims — a production package you can actually shoot from.</span></p></div>
+  </div>
+  <div class="foot"><span>TrendPilot</span><span>02</span></div>
+</div>
+
+<div class="s">
+  <div class="lbl">HOW IT WORKS</div>
+  <h2>관측 → 보수적 팔로워 분석 → 3개 실험 → 제작 패키지 → 실제 파일<span class="en">Observe → conservative follower audit → 3 experiments → production package → real artifacts</span></h2>
+  <div class="chain">입력: niche · audience · goal · weekly_minutes · 합성 예제 또는 Instagram export ZIP 2개 (동의 필수)
+  → Nosana 추론: 비식별 프로필 + 허용된 source_id만으로 분석 계획       (inference.nosana.com, OpenAI 호환)
+  → Daytona 샌드박스: 고정 Python 코드로 follower-diff + username 변경 감사 (LLM은 숫자 못 건드림)
+  → Nosana 추론: SAFE BET ≥1 · GROWTH EXPERIMENT ≥1 (weakness_target 정확히 1개), 총 3개
+  → Daytona 샌드박스: report.md · content-strategy.json · script.md · shot-list.json
+                     editing-guide.md · thumbnail-plan.md · publishing-package.md  → 다운로드 후 SHA-256 검증
+  → API(FastAPI 8317): 스키마·근거·시간예산 검증 → 프런트(5317)에서 다운로드
+  → DNSimple: 명시적 publish에서만 sandbox 레코드 생성+readback (public_url=null, sandbox_record_created)</div>
+  <p style="margin-top:14px"><span class="accent">규칙</span> Nosana가 Daytona를 직접 조종하지 않는다. API가 허용된 작업만 실행한다. 관측 1회는 "초기 반응 참고치"일 뿐 상승 속도가 아니다.<span class="en">Rule: Nosana never drives Daytona directly; the API executes an allowlist. One observation is a reference point, never "momentum".</span></p>
+  <div class="foot"><span>Frontend 127.0.0.1:5317 → Backend 127.0.0.1:8317 · contract v1.openapi.json 1.1.0</span><span>03</span></div>
+</div>
+
+<div class="s">
+  <div class="lbl">PRODUCTION PACKAGE · 각 Action마다</div>
+  <h2>사용자가 촬영만 하면 되도록<span class="en">Everything but the shoot, per action</span></h2>
+  <div class="grid3">
+    <div class="card"><h3>SCRIPT</h3><p>hook · intro · body · ending · cta</p></div>
+    <div class="card"><h3>SHOT LIST</h3><p>order · duration_sec · visual · narration · subtitle</p></div>
+    <div class="card"><h3>EDITING PLAN</h3><p>pace · caption_style · cut_plan · music_direction · b_roll_notes</p></div>
+    <div class="card"><h3>THUMBNAIL PLAN</h3><p>concept · text · composition · generation_prompt</p></div>
+    <div class="card"><h3>PUBLISHING</h3><p>title · description · hashtags · cta · target_metric · posting_notes</p></div>
+    <div class="card"><h3>VALIDATION<span class="en">enforced in code</span></h3><p>패키지 누락 = 실패 · growth인데 weakness_target 없음 = 거부 · Σ production_minutes ≤ weekly_minutes<span class="en">Missing package = failure; growth without weakness_target = rejected; time budget enforced.</span></p></div>
+  </div>
+  <div class="foot"><span>Follower invariants: raw_missing = outside_window + renamed + relationship_absent + unresolved + inactive</span><span>04</span></div>
+</div>
+
+<div class="s">
+  <div class="lbl">SPONSORS · HONESTY · NEXT</div>
+  <h2>스폰서는 장식이 아니라 실행 경로<span class="en">Sponsors on the critical path, not the logo wall</span></h2>
+  <div class="grid3">
+    <div class="card"><h3>Daytona</h3><p>고정 분석 코드와 아티팩트 렌더를 실제 샌드박스에서 실행, 7개 파일 다운로드 후 SHA-256 검증. sandbox id를 trace에 기록.<span class="en">Deterministic analysis + artifact rendering run in a real sandbox; 7 files downloaded and SHA-256 verified; sandbox id in trace.</span></p></div>
+    <div class="card"><h3>Nosana</h3><p>호스티드 추론(OpenAI 호환)으로 계획·3개 실험·패키지 JSON 생성. 모델·usage 영수증 저장. 팔로워 수치는 수정 불가.<span class="en">Hosted inference plans and generates the 3 actions as strict JSON; model/usage receipt stored; cannot alter follower numbers.</span></p></div>
+    <div class="card"><h3>DNSimple</h3><p>Run 성공과 publish 분리. sandbox 성공을 공개 도메인 성공이라 말하지 않음. 기존 레코드 overwrite/delete 금지.<span class="en">Publish is a separate explicit action; sandbox success ≠ public domain; never overwrite or delete records.</span></p></div>
+  </div>
+  <p style="margin-top:22px"><span class="accent">정직 규칙</span> is_mock 표시, 라이브 장애 시 몰래 mock 폴백 금지, 실제 생성·검증한 파일만 artifacts에. 다음: 실험→성과 기록→다음 추천 루프, 공개 도메인, 다중 소스.<span class="en">Honesty: is_mock flag, no silent mock fallback, only verified files listed. Next: experiment → outcome log → next recommendation loop, public domain, more sources.</span></p>
+  <div class="foot"><span>github.com/sanghyun747/aiaiiai · backend/HANDOFF.md에 실제 실행 영수증</span><span>05</span></div>
+</div>
+</body></html>
