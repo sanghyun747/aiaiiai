@@ -7,12 +7,16 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 from . import pipeline
-from .config import CONTRACT_VERSION, MAX_CONCURRENT_JOBS, live_providers_enabled
+from .config import (CONTRACT_VERSION, MAX_CONCURRENT_JOBS, REPLAY_NOTICE,
+                     live_providers_enabled, replay_mode_enabled)
 from .models import Followers, Result
 from providers import daytona_sandbox, nosana
 from providers.errors import ProviderError
 
 EXECUTOR = ThreadPoolExecutor(max_workers=MAX_CONCURRENT_JOBS, thread_name_prefix="tp-job")
+
+REPLAY_LIMITATION = (
+    "이 실행의 전략 3안은 고정 예시(replay)이며 실시간 AI 추론 결과가 아닙니다.")
 
 BASE_LIMITATIONS = [
     "단일 관측 기반 기술 통계입니다. 성장 속도·가속·인스타그램 유행 순위가 아닙니다.",
@@ -36,15 +40,22 @@ def execute(run, profile, uploads):
     try:
         follower_input = pipeline.stage_validate(run, profile, uploads)
 
-        if not live_providers_enabled():
+        replay = replay_mode_enabled()
+        if not live_providers_enabled() and not replay:
             raise pipeline.StageFailure(
                 "PROVIDER_UNAVAILABLE", "Live providers are disabled for this process.", False)
+        if replay:
+            # Explicit opt-in only. This is never reached by falling back from a
+            # live provider failure; TRENDPILOT_LIVE_PROVIDERS=0 must be set.
+            run.is_mock = True
 
         sources, evidence_mode = pipeline.collect_sources(run, profile)
         opportunities = pipeline.build_opportunities(sources)
 
-        client = nosana._client()
-        model = nosana.pick_model(client)
+        client = model = None
+        if not replay:
+            client = nosana._client()
+            model = nosana.pick_model(client)
 
         # Daytona sandbox spans analyze + render.
         sandbox = daytona_sandbox.DaytonaRun()
@@ -54,10 +65,15 @@ def execute(run, profile, uploads):
 
         followers = pipeline.stage_analyze(run, sandbox, follower_input)
 
-        plan = pipeline.stage_plan(run, profile, sources, opportunities, followers, client, model)
-        actions = pipeline.stage_recommend(run, profile, sources, opportunities,
-                                           followers, plan, client, model)
+        if replay:
+            plan = pipeline.stage_plan_replay(run, profile)
+            actions = pipeline.stage_recommend_replay(run, profile, sources)
+        else:
+            plan = pipeline.stage_plan(run, profile, sources, opportunities, followers, client, model)
+            actions = pipeline.stage_recommend(run, profile, sources, opportunities,
+                                               followers, plan, client, model)
 
+        limitations = ([REPLAY_LIMITATION] + BASE_LIMITATIONS) if replay else BASE_LIMITATIONS
         payload = {
             "contract_version": CONTRACT_VERSION,
             "evidence_mode": evidence_mode,
@@ -66,21 +82,26 @@ def execute(run, profile, uploads):
             "opportunities": opportunities,
             "followers": followers,
             "actions": [a.model_dump() for a in actions],
-            "limitations": BASE_LIMITATIONS,
+            "limitations": limitations,
         }
         artifacts = pipeline.stage_render(run, sandbox, payload)
 
         rundir = pipeline.RUNTIME_DIR / run.run_id / "artifacts"
         run.artifacts = {a["name"]: rundir / a["name"] for a in artifacts}
 
+        if replay:
+            notice = REPLAY_NOTICE
+        elif evidence_mode == "synthetic":
+            notice = ("합성 입력과 합성 참고 근거를 사용했습니다. 실제 SNS 유행이나 실제 계정 결과가 아닙니다. "
+                      "Nosana 추론과 Daytona 샌드박스 실행은 실제로 수행되었습니다.")
+        else:
+            notice = None
         result = Result(
             evidence_mode=evidence_mode,
-            sample_notice=("합성 입력과 합성 참고 근거를 사용했습니다. 실제 SNS 유행이나 실제 계정 결과가 아닙니다. "
-                           "Nosana 추론과 Daytona 샌드박스 실행은 실제로 수행되었습니다.")
-            if evidence_mode == "synthetic" else None,
+            sample_notice=notice,
             sources=sources, opportunities=opportunities,
             followers=Followers.model_validate(followers) if followers else None,
-            actions=actions, limitations=BASE_LIMITATIONS, artifacts=artifacts,
+            actions=actions, limitations=limitations, artifacts=artifacts,
         )
         run.result = result
         has_report = any(a["name"] == "report.md" for a in artifacts)

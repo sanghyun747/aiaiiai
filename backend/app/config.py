@@ -49,3 +49,17 @@ def configured() -> dict:
 
 def live_providers_enabled() -> bool:
     return os.environ.get("TRENDPILOT_LIVE_PROVIDERS", "1") == "1"
+
+
+def replay_mode_enabled() -> bool:
+    """Explicit opt-in labelled demo replay: Nosana plan/recommend are taken
+    from fixtures/run-sample.json instead of live inference. Daytona analyze and
+    render still execute for real. This is NEVER a fallback for a live failure -
+    it only activates when TRENDPILOT_LIVE_PROVIDERS=0 is set on purpose."""
+    return os.environ.get("TRENDPILOT_LIVE_PROVIDERS", "1") == "0"
+
+
+REPLAY_NOTICE = (
+    "데모 재생(replay) 모드입니다. 전략/추천 3안은 fixtures/run-sample.json의 고정 예시이며 "
+    "Nosana 실시간 추론 결과가 아닙니다. Daytona 샌드박스 분석과 산출물 렌더링은 실제로 실행되었습니다."
+)

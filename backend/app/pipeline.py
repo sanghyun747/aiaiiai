@@ -257,3 +257,39 @@ def stage_render(run, sandbox, payload):
            artifact_sha256=next((v["sha256"] for v in verified if v["name"] == "report.md"), None),
            detail="샌드박스에서 고정 템플릿으로 %d개 산출물 생성 후 SHA-256 로컬 검증." % len(verified))
     return verified
+
+
+# ------------------------------------------------------- labelled replay
+def load_replay_actions(profile, sources):
+    """Actions taken verbatim from fixtures/run-sample.json for the labelled
+    demo-replay path. Never used unless replay mode was explicitly enabled."""
+    sample = json.loads((FIXTURES / "run-sample.json").read_text(encoding="utf-8"))
+    raw_actions = sample["result"]["actions"]
+    allowed = [s["id"] for s in sources]
+    actions = []
+    for i, raw in enumerate(raw_actions, start=1):
+        raw = dict(raw)
+        raw["id"] = f"act-{i}"
+        raw["baseline"] = None
+        # Fixture source ids are sample-* and do not exist in this run; remap
+        # positionally onto the real allowed ids so the contract still holds.
+        raw["source_ids"] = [allowed[i % len(allowed)]] if allowed else []
+        actions.append(Action.model_validate(raw))
+    return _validate_actions([a.model_dump() for a in actions], profile, set(allowed))
+
+
+def stage_plan_replay(run, profile):
+    run.set_stage("plan")
+    sample = json.loads((FIXTURES / "run-sample.json").read_text(encoding="utf-8"))
+    _trace(run, "nosana", "plan", "replay", "success",
+           detail="TRENDPILOT_LIVE_PROVIDERS=0. fixtures/run-sample.json 고정 예시. 실제 추론 아님.")
+    return {"replay": True, "source": "fixtures/run-sample.json",
+            "limitations": sample["result"].get("limitations", [])}
+
+
+def stage_recommend_replay(run, profile, sources):
+    run.set_stage("recommend")
+    actions = load_replay_actions(profile, sources)
+    _trace(run, "nosana", "recommend", "replay", "success",
+           detail="TRENDPILOT_LIVE_PROVIDERS=0. fixtures/run-sample.json 고정 3안. 실제 추론 아님.")
+    return actions

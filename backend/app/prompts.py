@@ -16,6 +16,10 @@ GUARD = (
     "모든 수치 주장은 사용자가 직접 측정해 검증해야 하는 가설로 서술하십시오."
 )
 
+# Single-line English terminator. The qwen3 reasoning model follows a short
+# English instruction far more reliably than a long Korean one.
+JSON_ONLY = "Return ONLY one JSON object. No prose, no markdown, no reasoning."
+
 
 def _anon_sources(sources):
     return [{"id": s["id"], "source_mode": s["source_mode"], "platform": s["platform"],
@@ -45,7 +49,7 @@ def build_plan_prompt(profile, sources, opportunities, followers):
         + "\n\n출력 JSON 스키마: {\"strengths\":[문자열],\"weaknesses\":[문자열],"
           "\"safe_bet_direction\":문자열,\"growth_experiment_direction\":문자열,"
           "\"weakness_to_target\":문자열}\n"
-          "weaknesses는 2~4개, 각 항목은 짧은 명사구입니다."
+          "weaknesses는 2~4개, 각 항목은 짧은 명사구입니다.\n\n" + JSON_ONLY
     )
     return GUARD, user
 
@@ -86,7 +90,7 @@ def build_recommend_prompt(profile, sources, opportunities, followers, plan):
         "7) shot_list의 order는 1부터 1씩 증가하고 3~6개 샷을 담습니다.\n"
         "8) 모든 액션에 script/shot_list/editing_plan/thumbnail_plan/publishing_package를 빠짐없이 채웁니다.\n"
         "9) music_direction은 설명만 하고 특정 곡이나 라이선스를 제시하지 않습니다.\n\n"
-        "스키마:\n" + SCHEMA
+        "스키마:\n" + SCHEMA + "\n\n" + JSON_ONLY
     )
     return GUARD, user
 
@@ -94,5 +98,5 @@ def build_recommend_prompt(profile, sources, opportunities, followers, plan):
 def repair_prompt(system, user, previous_output, error):
     return system, (
         user + "\n\n이전 출력이 아래 이유로 거부되었습니다. 해당 문제만 고쳐 전체 JSON을 다시 출력하십시오.\n"
-        f"거부 사유: {error}\n이전 출력(앞부분): {previous_output[:1500]}"
+        f"거부 사유: {error}\n이전 출력(앞부분): {previous_output[:1500]}\n\n" + JSON_ONLY
     )
