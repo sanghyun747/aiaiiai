@@ -94,7 +94,7 @@ def test_replay_stages_are_traced_as_replay_not_live(profile, run):
     pipeline.stage_recommend_replay(run, profile, sources)
     assert plan["source"] == "fixtures/run-sample.json"
     modes = {(t["operation"], t["mode"]) for t in run.trace}
-    assert ("plan", "replay") in modes and ("recommend", "replay") in modes
+    assert ("plan", "mock") in modes and ("recommend", "mock") in modes
     assert not any(t["mode"] == "live" and t["provider"] == "nosana" for t in run.trace)
     for t in run.trace:
         assert "run-sample.json" in t["detail"]
@@ -168,4 +168,4 @@ def test_replay_run_reaches_succeeded_with_real_sandbox_stages(monkeypatch, prof
     # Daytona stages are NOT replayed.
     assert ("daytona", "analyze", "live") in ops
     assert ("daytona", "render", "live") in ops
-    assert ("nosana", "plan", "replay") in ops
+    assert ("nosana", "plan", "mock") in ops

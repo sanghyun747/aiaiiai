@@ -1,3 +1,20 @@
+## Verified replay-mode run with live Daytona render (2026-09-19 16:18 KST)
+
+`TRENDPILOT_LIVE_PROVIDERS=0` → run `run_fdc9d8034fef20be` → **status `succeeded`**, `is_mock=true` (plan/recommend replayed from `fixtures/run-sample.json`, trace mode `mock`).
+Daytona stages were **live**: sandbox `fa7889ff-8f4e-49e0-85f2-7ba591c9f1f4` — analyze (success), render (success), sandbox_stop (success). All 7 artifacts were downloaded through the API and re-hashed locally; every hash matches the value listed in `result.artifacts`.
+
+| artifact | bytes | SHA-256 | matches listing |
+|---|---|---|---|
+| `content-strategy.json` | 20556 | `d720446bc38a627774ae3c0633eab35248fa541a13e0b4b56baa1e756329a9bd` | yes |
+| `editing-guide.md` | 1594 | `db93d56af725488619944538cd77c0424df5e847c7bd7ea7824091838dd13d81` | yes |
+| `publishing-package.md` | 1910 | `e758c270508d7aa4bea26163e9cf749fe95bda736cf75dd70c4bad57b9336219` | yes |
+| `report.md` | 12375 | `2b8a7657204f2ba94a62edc05ef418a6c6acd4dcc4f494ba0a94160d3fe35c34` | yes |
+| `script.md` | 2172 | `c288ba2902c3f8ecf97d30dd18da8b9d777d5fa5dedbdfdc5e338078ea39a47c` | yes |
+| `shot-list.json` | 2970 | `477d899c0c2670e8b759073b139bbddf1d139e8a039e1de48d04288aab8369aa` | yes |
+| `thumbnail-plan.md` | 1452 | `63feebe102fe7d73d3361e0a9987e1a9dc808801482c3f1ad50b58d44b5b4be2` | yes |
+
+Contract note: replay trace entries use `mode="mock"` (the frozen contract allows only live/mock/cached); the run carries `is_mock=true` and a `sample_notice`.
+
 # Session B handoff — backend, contract 1.1.0
 
 ## UPDATE 2026-09-19 (fixer session, 25-min budget) — read this before the older text below

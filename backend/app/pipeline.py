@@ -281,7 +281,7 @@ def load_replay_actions(profile, sources):
 def stage_plan_replay(run, profile):
     run.set_stage("plan")
     sample = json.loads((FIXTURES / "run-sample.json").read_text(encoding="utf-8"))
-    _trace(run, "nosana", "plan", "replay", "success",
+    _trace(run, "nosana", "plan", "mock", "success",
            detail="TRENDPILOT_LIVE_PROVIDERS=0. fixtures/run-sample.json 고정 예시. 실제 추론 아님.")
     return {"replay": True, "source": "fixtures/run-sample.json",
             "limitations": sample["result"].get("limitations", [])}
@@ -290,6 +290,6 @@ def stage_plan_replay(run, profile):
 def stage_recommend_replay(run, profile, sources):
     run.set_stage("recommend")
     actions = load_replay_actions(profile, sources)
-    _trace(run, "nosana", "recommend", "replay", "success",
+    _trace(run, "nosana", "recommend", "mock", "success",
            detail="TRENDPILOT_LIVE_PROVIDERS=0. fixtures/run-sample.json 고정 3안. 실제 추론 아님.")
     return actions
