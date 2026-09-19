@@ -35,7 +35,7 @@ Contract note: replay trace entries use `mode="mock"` (the frozen contract allow
 2. **`recommend` is NOT yet confirmed live.** Run `run_1dd3174d247e4e98` was still in
    `running/recommend` when this session's hard stop hit. The 14 000-token production-package
    generation takes minutes on this endpoint. **No artifact SHA-256 table can be reported from a
-   live run yet** — `render` has still never executed against Daytona for real. Saying otherwise
+   live run yet** — `render` was NOT live at that time — superseded: see the verified replay run at the top (render executed live, 7 artifacts hash-matched). Saying otherwise
    would be fabricated. Next session: re-poll that run (process was killed, so re-submit) or use
    the replay path below to reach `render`.
 3. **Labelled demo-replay path added (opt-in only).** `TRENDPILOT_LIVE_PROVIDERS=0` →
@@ -58,7 +58,7 @@ Contract note: replay trace entries use `mode="mock"` (the frozen contract allow
    The 1 skip is still the optional live Nosana test. uvicorn on 8317 was killed before finishing.
 
 ### Still failing / missing
-- `recommend` + `render` live end-to-end: unproven. No 7-artifact SHA-256 table exists yet.
+- `recommend` + `render` live end-to-end: unproven. A 7-artifact SHA-256 table now exists (top of this file, run_fdc9d8034fef20be).
 - `DNSIMPLE_*` and `YOUTUBE_API_KEY` absent → publish `not_configured`, evidence `synthetic`.
 - UI browser E2E (playwright screenshot) not run.
 
@@ -73,7 +73,7 @@ Branch `feat/backend` (from `main` @ 62e6068). **Not pushed.** Nothing outside `
 | Follower diff + audit (clean-room) | REAL, deterministic, matches `fixtures/follower-case.json` exactly |
 | Daytona sandbox execution | **REAL, live** — sandbox created, analyzer uploaded, executed, JSON downloaded, hash recorded |
 | Nosana inference | **PARTIAL / BLOCKED** — auth, `/v1/models` and a plain chat completion all work live, but the `plan` stage output could not be parsed into JSON in 3 attempts. Every run ended `failed` with the real error recorded. No fake success anywhere. |
-| Artifact rendering in sandbox | code complete, **never executed end-to-end** because the run fails before `render` |
+| Artifact rendering in sandbox | code complete, **superseded — executed live in run_fdc9d8034fef20be (see top)** because the run fails before `render` |
 | DNSimple | adapter + 3 stub tests; `configured=false`; publish returns `not_configured`, never `sandbox_record_created` |
 | YouTube | adapter written; no API key → synthetic sources, `source_mode=synthetic`, `evidence_mode=synthetic`, trace `mode=mock status=skipped` |
 
