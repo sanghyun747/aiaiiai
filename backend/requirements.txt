@@ -1,0 +1,9 @@
+# Pinned to the versions actually installed and tested on this machine.
+fastapi==0.141.1
+uvicorn[standard]==0.53.0
+python-multipart==0.0.32
+pydantic==2.13.5
+openai==3.16.2
+daytona==0.214.0
+httpx==0.28.1
+pytest==9.1.1
