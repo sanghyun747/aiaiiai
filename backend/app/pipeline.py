@@ -110,7 +110,7 @@ def build_opportunities(sources):
 def stage_plan(run, profile, sources, opportunities, followers, client, model):
     run.set_stage("plan")
     system, user = build_plan_prompt(profile, sources, opportunities, followers)
-    plan, receipt, _ = nosana.complete_json(system, user, model=model, client=client, max_tokens=1500)
+    plan, receipt, _ = nosana.complete_json(system, user, model=model, client=client, max_tokens=4000)
     _trace(run, "nosana", "plan", "live", "success", remote_id=receipt["remote_id"],
            duration_ms=receipt["duration_ms"],
            detail=f"model={receipt['model']} usage={json.dumps(receipt['usage'])}")
@@ -193,7 +193,7 @@ def stage_recommend(run, profile, sources, opportunities, followers, plan, clien
     run.set_stage("recommend")
     source_ids = {s["id"] for s in sources}
     system, user = build_recommend_prompt(profile, sources, opportunities, followers, plan)
-    data, receipt, text = nosana.complete_json(system, user, model=model, client=client, max_tokens=8000)
+    data, receipt, text = nosana.complete_json(system, user, model=model, client=client, max_tokens=14000)
     run.receipts.append({"stage": "recommend", **receipt})
     try:
         actions = _validate_actions(data.get("actions") if isinstance(data, dict) else data,
@@ -204,7 +204,7 @@ def stage_recommend(run, profile, sources, opportunities, followers, plan, clien
                remote_id=receipt["remote_id"], duration_ms=receipt["duration_ms"],
                detail=f"1차 출력 검증 실패: {str(first)[:250]}")
         sys2, user2 = repair_prompt(system, user, text, str(first))
-        data2, receipt2, _ = nosana.complete_json(sys2, user2, model=model, client=client, max_tokens=8000)
+        data2, receipt2, _ = nosana.complete_json(sys2, user2, model=model, client=client, max_tokens=14000)
         run.receipts.append({"stage": "recommend_repair", **receipt2})
         try:
             actions = _validate_actions(data2.get("actions") if isinstance(data2, dict) else data2,

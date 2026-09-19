@@ -17,6 +17,7 @@ from .errors import ProviderError
 
 BASE_URL = os.environ.get("NOSANA_BASE_URL", "https://inference.nosana.com/v1")
 _PREFERRED = re.compile(r"(instruct|chat|qwen|llama|mistral|gemma|deepseek)", re.I)
+_EXCLUDE = re.compile(r"(embed|rerank|whisper|tts|vision-only)", re.I)
 
 
 def _client():
@@ -39,6 +40,8 @@ def pick_model(client=None) -> str:
         raw = getattr(m, "model_extra", None) or {}
         if raw.get("available") is False:
             continue
+        if _EXCLUDE.search(m.id):
+            continue  # embedding/rerank models cannot serve chat completions
         available.append(m.id)
     if not available:
         raise ProviderError("MODEL_UNAVAILABLE", "No available Nosana model in /v1/models.", True)
@@ -49,34 +52,43 @@ def pick_model(client=None) -> str:
 
 
 def _extract_json(text: str):
+    """Tolerant extraction: strips reasoning blocks and code fences, then scans
+    every candidate start for the first balanced JSON value that parses."""
+    text = re.sub(r"<think>.*?</think>", " ", text, flags=re.S | re.I)
+    text = re.sub(r"<\|?(?:channel|analysis|reasoning)[^>]*>.*?<[^>]*>", " ", text, flags=re.S | re.I)
     text = text.strip()
-    if text.startswith("```"):
-        text = re.sub(r"^```[a-zA-Z]*\n", "", text)
-        text = re.sub(r"\n```\s*$", "", text)
-    start = min([i for i in (text.find("{"), text.find("[")) if i >= 0], default=-1)
-    if start < 0:
-        raise ValueError("no JSON object in model output")
-    depth, in_str, esc, opener = 0, False, False, text[start]
-    closer = "}" if opener == "{" else "]"
-    for i in range(start, len(text)):
-        ch = text[i]
-        if in_str:
-            if esc:
-                esc = False
-            elif ch == "\\":
-                esc = True
-            elif ch == '"':
-                in_str = False
+    if "```" in text:
+        fenced = re.findall(r"```[a-zA-Z]*\n(.*?)```", text, flags=re.S)
+        if fenced:
+            text = max(fenced, key=len)
+    for start in range(len(text)):
+        opener = text[start]
+        if opener not in "{[":
             continue
-        if ch == '"':
-            in_str = True
-        elif ch == opener:
-            depth += 1
-        elif ch == closer:
-            depth -= 1
-            if depth == 0:
-                return json.loads(text[start:i + 1])
-    raise ValueError("unterminated JSON in model output")
+        closer = "}" if opener == "{" else "]"
+        depth, in_str, esc = 0, False, False
+        for i in range(start, len(text)):
+            ch = text[i]
+            if in_str:
+                if esc:
+                    esc = False
+                elif ch == "\\":
+                    esc = True
+                elif ch == '"':
+                    in_str = False
+                continue
+            if ch == '"':
+                in_str = True
+            elif ch == opener:
+                depth += 1
+            elif ch == closer:
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(text[start:i + 1])
+                    except json.JSONDecodeError:
+                        break
+    raise ValueError("no parseable JSON object in model output (%d chars)" % len(text))
 
 
 def complete_json(system: str, user: str, model: str = None, client=None, max_tokens: int = 6000):
@@ -93,7 +105,13 @@ def complete_json(system: str, user: str, model: str = None, client=None, max_to
         )
     except Exception as exc:  # pragma: no cover - network
         raise ProviderError("PROVIDER_UNAVAILABLE", f"Nosana inference failed: {type(exc).__name__}: {exc}", True)
-    text = resp.choices[0].message.content or ""
+    choice = resp.choices[0]
+    text = choice.message.content or ""
+    if choice.finish_reason == "length":
+        raise ProviderError(
+            "AI_OUTPUT_INVALID",
+            f"Nosana output was truncated at max_tokens={max_tokens} (finish_reason=length); "
+            "no valid JSON was produced.", True)
     usage = resp.usage
     receipt = {
         "model": getattr(resp, "model", model),
