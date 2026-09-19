@@ -12,7 +12,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import ValidationError
 
 from . import exports, worker
-from .config import ARTIFACT_NAMES, CONTRACT_VERSION, MAX_UPLOAD_BYTES, RUNTIME_DIR, configured
+from .config import (ARTIFACT_NAMES, BASE_DIR, CONTRACT_VERSION, MAX_UPLOAD_BYTES, RUNTIME_DIR,
+                     configured)
 from .models import (Accepted, Error, ErrorEnvelope, Health, Profile, PublishRequest,
                      Publication, Run)
 from .report_html import render_public_html
@@ -72,6 +73,21 @@ def _run_model(run) -> Run:
     return Run(run_id=run.run_id, status=run.status, stage=run.stage, is_mock=run.is_mock,
                created_at=run.created_at, updated_at=run.updated_at, trace=run.trace,
                result=run.result, error=run.error)
+
+
+STATIC_DIR = BASE_DIR / "app" / "static"
+
+
+@app.get("/", response_class=HTMLResponse)
+def ui():
+    """Minimal single-file operator UI. No build step, no external assets."""
+    index = STATIC_DIR / "index.html"
+    if not index.exists():
+        raise HTTPException(status_code=404, detail="UI is not installed.")
+    return HTMLResponse(content=index.read_text(encoding="utf-8"), headers={
+        "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-store",
+    })
 
 
 @app.get("/api/v1/health", response_model=Health)

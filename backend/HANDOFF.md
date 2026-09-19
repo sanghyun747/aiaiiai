@@ -1,5 +1,51 @@
 # Session B handoff — backend, contract 1.1.0
 
+## UPDATE 2026-09-19 (fixer session, 25-min budget) — read this before the older text below
+
+1. **Nosana `plan` is UNBLOCKED and verified live.** `providers/nosana.complete_json` now sends
+   `response_format={"type":"json_object"}` first and retries without it only if the endpoint
+   rejects that parameter; enforces `MIN_MAX_TOKENS=4000` (a small budget makes qwen3 return
+   `content: null` and spend everything on `reasoning`); reads `message.content` and falls back to
+   `reasoning_content`/`reasoning`; strips `<think>…</think>` and code fences; extracts the first
+   balanced `{…}`/`[…]` by string-aware brace counting; and on any parse failure dumps
+   `text[:2000]` to `backend/.runtime/nosana_last_raw.txt` and reports the excerpt in the error.
+   All prompts now end with the single English line
+   `Return ONLY one JSON object. No prose, no markdown, no reasoning.`
+   **Live receipt:** `chatcmpl-a96bd4e3bd7347a9`, model `qwen/qwen3.8-27b`, `json_mode=true`,
+   usage `prompt=655 completion=1179 total=1834`, 14.1 s — parsed plan JSON returned.
+   In-run receipt on `run_1dd3174d247e4e98`: `nosana plan live success`,
+   usage `prompt=765 completion=1697 total=2462`.
+2. **`recommend` is NOT yet confirmed live.** Run `run_1dd3174d247e4e98` was still in
+   `running/recommend` when this session's hard stop hit. The 14 000-token production-package
+   generation takes minutes on this endpoint. **No artifact SHA-256 table can be reported from a
+   live run yet** — `render` has still never executed against Daytona for real. Saying otherwise
+   would be fabricated. Next session: re-poll that run (process was killed, so re-submit) or use
+   the replay path below to reach `render`.
+3. **Labelled demo-replay path added (opt-in only).** `TRENDPILOT_LIVE_PROVIDERS=0` →
+   `config.replay_mode_enabled()` → plan/recommend come from `fixtures/run-sample.json`,
+   `run.is_mock=true`, `sample_notice=config.REPLAY_NOTICE`, extra limitation
+   `worker.REPLAY_LIMITATION`, trace `mode="replay"`. **Daytona analyze AND render still run live.**
+   Any other value of the env var (`""`, `"false"`, `"2"`) enables neither live nor replay, and a
+   live provider failure never falls back — both are covered by tests.
+4. **Minimal UI at `GET /`** → `backend/app/static/index.html` (plain HTML+JS, no build, light
+   theme, one accent). Form → `POST /api/v1/runs` multipart with a fresh random `Idempotency-Key`;
+   polls `GET /api/v1/runs/{id}` every 1500 ms; shows stage, the provider-trace table and a
+   **MOCK/REPLAY** vs **LIVE** badge from `is_mock`; renders `strategy_mode`, `weakness_target` and
+   all 5 production-package sections; artifact buttons use an authenticated `fetch` with the bearer
+   in the header and a blob download (token never in a URL). **Not yet E2E-verified in a browser** —
+   the route was added after the live run started and uvicorn was not restarted before the stop.
+5. **Tests: `89 passed, 1 skipped`** (`backend/.venv/bin/python -m pytest -q`). New files:
+   `tests/test_json_extraction.py` (20 tests: think-block/fence stripping, braces inside strings,
+   escaped quotes, array-vs-object ordering, raw dump, json_object fallback, max_tokens floor,
+   truncation) and `tests/test_replay.py` (13 tests incl. the no-silent-fallback guarantee).
+   The 1 skip is still the optional live Nosana test. uvicorn on 8317 was killed before finishing.
+
+### Still failing / missing
+- `recommend` + `render` live end-to-end: unproven. No 7-artifact SHA-256 table exists yet.
+- `DNSIMPLE_*` and `YOUTUBE_API_KEY` absent → publish `not_configured`, evidence `synthetic`.
+- UI browser E2E (playwright screenshot) not run.
+
+
 Branch `feat/backend` (from `main` @ 62e6068). **Not pushed.** Nothing outside `backend/**` was touched.
 
 ## What is REAL vs not — read this first

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrendPilot</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1b1f24;--muted:#646e7a;--line:#e2e6ea;--accent:#2563eb;--warn:#b45309;--warnbg:#fef3c7;--ok:#0f766e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,"Segoe UI",Roboto,"Noto Sans KR",sans-serif}
+.wrap{max-width:940px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 12px;letter-spacing:.01em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+input[type=text],input[type=number],select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff;color:var(--ink)}
+.chk{display:flex;gap:8px;align-items:flex-start;margin-top:10px;font-size:13px}
+.chk input{margin-top:3px}
+button{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent);font-weight:500;padding:6px 12px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.04em}
+.badge.mock{background:var(--warnbg);color:var(--warn)}
+.badge.live{background:#dcfce7;color:var(--ok)}
+.pill{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#eef2ff;color:var(--accent)}
+.notice{background:var(--warnbg);color:var(--warn);border-radius:6px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.err{background:#fee2e2;color:#991b1b;border-radius:6px;padding:10px 12px;font-size:13px}
+.act{border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px}
+.act h3{font-size:14px;margin:6px 0 8px}
+details{margin:6px 0;border-top:1px solid var(--line);padding-top:6px}
+summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent)}
+details div{font-size:13px;color:#33404d;padding:6px 0}
+ul{margin:4px 0;padding-left:18px}
+.dl{display:flex;flex-wrap:wrap;gap:8px}
+.muted{color:var(--muted);font-size:12px}
+.hide{display:none}
+code{background:#eef1f4;padding:1px 5px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TrendPilot</h1>
+  <p class="sub">숏폼 전략 3안 + 제작 패키지. 모든 근거의 실제/합성/재생 여부를 화면에 그대로 표시합니다.</p>
+
+  <form class="card" id="form">
+    <h2>프로필</h2>
+    <div class="grid">
+      <div><label for="niche">니치</label><input type="text" id="niche" value="학습과 생산성" required></div>
+      <div><label for="audience">타깃 시청자</label><input type="text" id="audience" value="공부 루틴을 기록하는 대학생 크리에이터" required></div>
+      <div><label for="goal">목표</label><select id="goal"><option value="followers">팔로워</option><option value="views">조회수</option><option value="leads">리드</option></select></div>
+      <div><label for="format">콘텐츠 포맷</label><select id="format"><option value="instagram_reel">인스타그램 릴스</option><option value="youtube_short">유튜브 쇼츠</option></select></div>
+      <div><label for="weekly">주간 제작 가능 시간(분)</label><input type="number" id="weekly" value="120" min="10" max="10000" required></div>
+      <div><label for="query">트렌드 검색어</label><input type="text" id="query" value="공부 루틴" required></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="sample" checked><span>예시 팔로워 데이터 사용 (합성 export 쌍을 생성합니다. 실제 계정 데이터가 아닙니다.)</span></label>
+    <label class="chk"><input type="checkbox" id="consent"><span>클라우드 처리 동의 — 실제 인스타그램 export를 업로드할 때만 필요합니다. 최소화된 <code>{username,timestamp}</code> 레코드만 샌드박스로 전송됩니다.</span></label>
+    <p style="margin:16px 0 0"><button type="submit" id="go">실행 시작</button> <span class="muted" id="hint"></span></p>
+  </form>
+
+  <div class="card hide" id="status">
+    <h2>실행 상태 <span class="badge live" id="mockbadge">LIVE</span></h2>
+    <p style="margin:0 0 10px"><code id="runid"></code> · 상태 <b id="st"></b> · 단계 <b id="stage"></b></p>
+    <div id="errbox"></div>
+    <h2 style="margin-top:16px">프로바이더 추적</h2>
+    <table><thead><tr><th>provider</th><th>operation</th><th>mode</th><th>status</th><th>sha256 / detail</th></tr></thead><tbody id="trace"></tbody></table>
+  </div>
+
+  <div class="card hide" id="resultcard">
+    <h2>전략 3안</h2>
+    <div id="notice"></div>
+    <div id="actions"></div>
+    <h2 style="margin-top:20px">산출물 (7종)</h2>
+    <div class="dl" id="arts"></div>
+    <h2 style="margin-top:20px">한계</h2>
+    <ul id="lims" class="muted"></ul>
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+let TOKEN = null, RUN = null, timer = null;
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function key(){ const a = new Uint8Array(18); crypto.getRandomValues(a);
+  return "ui-" + Array.from(a, b => b.toString(16).padStart(2,"0")).join(""); }
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("go").disabled = true; $("hint").textContent = "요청 전송 중…";
+  const profile = {
+    niche: $("niche").value, audience: $("audience").value, goal: $("goal").value,
+    format: $("format").value, weekly_minutes: Number($("weekly").value),
+    query: $("query").value, data_mode: "demo",
+    sample_followers: $("sample").checked, pair_is_consecutive: true,
+    cloud_processing_consent: $("consent").checked
+  };
+  const fd = new FormData();
+  fd.append("profile_json", JSON.stringify(profile));
+  try {
+    const r = await fetch("/api/v1/runs", { method:"POST", headers:{"Idempotency-Key": key()}, body: fd });
+    const j = await r.json();
+    if (!r.ok) throw new Error((j.error && j.error.message) || r.status);
+    TOKEN = j.access_token; RUN = j.run_id;
+    $("status").classList.remove("hide"); $("runid").textContent = RUN;
+    $("hint").textContent = "";
+    poll(); timer = setInterval(poll, 1500);
+  } catch (err) {
+    $("hint").textContent = "실패: " + err.message; $("go").disabled = false;
+  }
+});
+
+async function poll(){
+  const r = await fetch(`/api/v1/runs/${RUN}`, { headers: { Authorization: "Bearer " + TOKEN } });
+  if (!r.ok) return;
+  const run = await r.json();
+  $("st").textContent = run.status; $("stage").textContent = run.stage;
+  const b = $("mockbadge");
+  b.textContent = run.is_mock ? "MOCK/REPLAY" : "LIVE";
+  b.className = "badge " + (run.is_mock ? "mock" : "live");
+  $("trace").innerHTML = (run.trace||[]).map(t => `<tr><td>${esc(t.provider)}</td><td>${esc(t.operation)}</td>
+    <td><span class="pill">${esc(t.mode)}</span></td><td>${esc(t.status)}</td>
+    <td class="muted">${t.artifact_sha256 ? "<code>"+esc(t.artifact_sha256.slice(0,16))+"…</code><br>" : ""}${esc(t.detail||"")}</td></tr>`).join("");
+  $("errbox").innerHTML = run.error ? `<div class="err"><b>${esc(run.error.code)}</b> — ${esc(run.error.message)}</div>` : "";
+  if (["succeeded","partial","failed"].includes(run.status)){
+    clearInterval(timer); $("go").disabled = false;
+    if (run.result) draw(run.result, run.is_mock);
+  }
+}
+
+function pkgSections(p){
+  if (!p) return "";
+  const li = a => (a||[]).map(x => `<li>${esc(typeof x === "string" ? x : JSON.stringify(x))}</li>`).join("");
+  const s = p.script || {}, ed = p.editing_plan || {}, th = p.thumbnail_plan || {}, pb = p.publishing_package || {};
+  return `
+  <details><summary>1. 스크립트</summary><div><b>훅</b> ${esc(s.hook)}<br><b>도입</b> ${esc(s.intro)}<ul>${li(s.body)}</ul><b>마무리</b> ${esc(s.ending)}<br><b>CTA</b> ${esc(s.cta)}</div></details>
+  <details><summary>2. 샷 리스트 (${(p.shot_list||[]).length}컷)</summary><div><table><thead><tr><th>#</th><th>초</th><th>화면</th><th>나레이션</th><th>자막</th></tr></thead><tbody>
+    ${(p.shot_list||[]).map(x=>`<tr><td>${esc(x.order)}</td><td>${esc(x.duration_sec)}</td><td>${esc(x.visual)}</td><td>${esc(x.narration)}</td><td>${esc(x.subtitle)}</td></tr>`).join("")}
+  </tbody></table></div></details>
+  <details><summary>3. 편집 가이드</summary><div><b>페이스</b> ${esc(ed.pace)}<br><b>자막</b> ${esc(ed.caption_style)}<br><b>컷</b> ${esc(ed.cut_plan)}<br><b>음악 방향</b> ${esc(ed.music_direction)}<ul>${li(ed.b_roll_notes)}</ul></div></details>
+  <details><summary>4. 썸네일 기획</summary><div><b>콘셉트</b> ${esc(th.concept)}<br><b>텍스트</b> ${esc(th.text)}<br><b>구도</b> ${esc(th.composition)}<br><b>생성 프롬프트</b> ${esc(th.generation_prompt)}</div></details>
+  <details><summary>5. 퍼블리싱 패키지</summary><div><b>제목</b> ${esc(pb.title)}<br><b>설명</b> ${esc(pb.description)}<br><b>해시태그</b> ${esc((pb.hashtags||[]).join(" "))}<br><b>CTA</b> ${esc(pb.cta)}<br><b>측정 지표</b> ${esc(pb.target_metric)}<br><b>게시 메모</b> ${esc(pb.posting_notes)}</div></details>`;
+}
+
+function draw(res, isMock){
+  $("resultcard").classList.remove("hide");
+  $("notice").innerHTML = res.sample_notice ? `<div class="notice">${isMock ? "<b>MOCK/REPLAY</b> — " : ""}${esc(res.sample_notice)}</div>` : "";
+  $("actions").innerHTML = (res.actions||[]).map(a => `<div class="act">
+    <span class="pill">${esc(a.strategy_mode)}</span>
+    ${a.weakness_target ? ` <span class="pill">약점: ${esc(a.weakness_target)}</span>` : ` <span class="muted">weakness_target: null</span>`}
+    <h3>${esc(a.title)}</h3>
+    <div class="muted">${esc(a.fit_reason)} · ${esc(a.production_minutes)}분 · 측정 ${esc(a.measurement_window_hours)}시간 · baseline ${a.baseline === null ? "null (직접 수집 필요)" : esc(a.baseline)}</div>
+    <div style="margin:8px 0"><b>훅 A</b> ${esc(a.hook_a)}<br><b>훅 B</b> ${esc(a.hook_b)}<br><b>성공 판정</b> ${esc(a.success_rule)}</div>
+    ${pkgSections(a.production_package)}</div>`).join("");
+  $("lims").innerHTML = (res.limitations||[]).map(l => `<li>${esc(l)}</li>`).join("");
+  $("arts").innerHTML = (res.artifacts||[]).length
+    ? (res.artifacts||[]).map(a => `<button class="ghost" data-n="${esc(a.name)}" title="sha256 ${esc(a.sha256)}">⬇ ${esc(a.name)}</button>`).join("")
+    : `<span class="muted">이 실행에서 검증된 산출물이 없습니다.</span>`;
+  $("arts").querySelectorAll("button").forEach(btn => btn.onclick = () => dl(btn.dataset.n));
+}
+
+async function dl(name){
+  // Bearer token travels in the header only; it is never placed in a URL.
+  const r = await fetch(`/api/v1/runs/${RUN}/artifacts/${encodeURIComponent(name)}`,
+                        { headers: { Authorization: "Bearer " + TOKEN } });
+  if (!r.ok) { alert("다운로드 실패: " + r.status); return; }
+  const url = URL.createObjectURL(await r.blob());
+  const a = document.createElement("a");
+  a.href = url; a.download = name; document.body.appendChild(a); a.click();
+  a.remove(); URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

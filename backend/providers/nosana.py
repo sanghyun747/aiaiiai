@@ -78,12 +78,14 @@ def _strip_wrappers(text: str, drop_open_think: bool = False) -> str:
     return text
 
 
-def _first_balanced(text: str, opener: str):
-    """First balanced {...} / [...] value, by brace counting, string-aware."""
-    closer = "}" if opener == "{" else "]"
+def _first_balanced(text: str):
+    """First balanced {...} / [...] value, by brace counting, string-aware.
+    Scans left to right so an object nested inside an array is not preferred."""
     for start in range(len(text)):
-        if text[start] != opener:
+        opener = text[start]
+        if opener not in "{[":
             continue
+        closer = "}" if opener == "{" else "]"
         depth, in_str, esc = 0, False, False
         for i in range(start, len(text)):
             ch = text[i]
@@ -125,10 +127,9 @@ def _extract_json(text: str):
             return json.loads(cleaned)
         except json.JSONDecodeError:
             pass
-        for opener in ("{", "["):
-            found = _first_balanced(cleaned, opener)
-            if found is not _MISSING:
-                return found
+        found = _first_balanced(cleaned)
+        if found is not _MISSING:
+            return found
     raise ValueError("no parseable JSON object in model output (%d chars)" % length)
 
 

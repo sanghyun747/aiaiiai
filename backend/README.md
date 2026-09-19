@@ -1,3 +1,9 @@
+> **Status 2026-09-19:** Daytona analyze = LIVE. Nosana `plan` = LIVE and verified
+> (`json_object` mode, receipt `chatcmpl-a96bd4e3bd7347a9`). Nosana `recommend` and the
+> Daytona `render` stage are **still unproven live** — no artifact SHA-256 table exists yet.
+> Opt-in labelled demo replay: `TRENDPILOT_LIVE_PROVIDERS=0` (fixture actions, `is_mock=true`,
+> Daytona still real). Minimal UI at `GET /`. Missing keys: `DNSIMPLE_*`, `YOUTUBE_API_KEY`.
+
 # TrendPilot backend (Session B)
 
 Contract 1.1.0. Owns `backend/**` only.
