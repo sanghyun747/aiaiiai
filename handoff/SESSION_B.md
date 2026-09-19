@@ -1,33 +1,108 @@
-# Session B — API, deterministic analytics and provider implementer
+# Session B — API, analytics, Production Agent and sponsor-provider implementer
 
-Project: TrendPilot. Execute the scoped MVP, not another planning document. Architect owns scope/contracts/merge; Session A independently builds frontend against the same frozen contract.
+Project: TrendPilot. Execute the frozen MVP; do not redesign it. Architect owns scope/contracts/final merge. Session A independently builds frontend and owns GitHub remote creation. You own backend/** only.
 
 ## Workspace and ownership
 
 Actual worktree: C:\Users\sangh\trendpilot-hackathon-20260919-api
 Branch: feat/backend
-Start at the same contracts-v1 baseline as A. Verify scoped git branch/status first; stop on unexpected edits. Follow host initialization at C:\Users\sangh using the existing approved DevSpace connection, but run project commands only in the assigned worktree. Never touch the home Git repo or A's worktree.
+Expected baseline: contracts-v2 / contract 1.1.0, identical to Session A. Verify branch, HEAD and status first. Stop on unexpected edits.
 
-Read AGENTS.md, README.md, contracts/HTTP.md, contracts/v1.openapi.json, fixtures/follower-case.json, fixtures/run-sample.json and docs/PROVIDERS_AND_TESTS.md. Write ONLY backend/**: API, vendor copy, tests, dependencies, environment template and HANDOFF.md. No root/frontend/contract/fixture edits. Commit only backend paths. Never merge, rebase or push.
+Read:
+- AGENTS.md
+- README.md
+- contracts/HTTP.md
+- contracts/v1.openapi.json
+- fixtures/follower-case.json
+- fixtures/run-sample.json
+- docs/PROVIDERS_AND_TESTS.md
+- handoff/INTEGRATION.md
 
-No deletion of files/data/test outputs, destructive rollback or automatic cleanup without explicit user approval. Never overwrite the original skill or user ZIPs. Do not start another DevSpace server for this app. If one is genuinely required for a clone/test, set DEVSPACE_GATE_KEY_FILE=C:\Users\sangh\trendpilot-hackathon-20260919-api\.runtime\devspace-gate.key before launch, with isolated ports/state. Never use production gate key/state.
+Write ONLY backend/**: API, vendor copy, tests, provider adapters, runtime templates, generated-artifact code, README and HANDOFF. No root/frontend/contract/fixture edits. Commit backend paths only. Never merge/rebase/push. Session A owns initial GitHub remote creation; you must not race it.
+
+No deletion of files/data/test outputs, destructive rollback or automatic cleanup without explicit user approval. Never overwrite original skill/user ZIPs. Do not start a second DevSpace server. If a test DevSpace is genuinely needed, set DEVSPACE_GATE_KEY_FILE=C:\Users\sangh\trendpilot-hackathon-20260919-api\.runtime\devspace-gate.key and isolate ports/state.
+
+## Product outcome
+
+Backend must turn grounded evidence into a complete shooting-excluded production handoff, not just idea text.
+
+Every successful run returns exactly three actions:
+- at least one strategy_mode=safe_bet;
+- at least one strategy_mode=growth_experiment;
+- each growth experiment targets exactly one weakness_target.
+
+Every action must include:
+- script;
+- ordered shot_list;
+- editing_plan;
+- thumbnail_plan;
+- publishing_package.
+
+The system may say it generated an editing GUIDE. It must not claim a finished video was edited/rendered unless real user-recorded media passed through an actual renderer and a verified media artifact exists. No such claim is required for P0.
 
 ## Execute in this order
 
-1. **Preflight first.** Create empty backend/.env.example; no secret values in chat/Git/UI. Verify official provider docs, key presence, available Nosana models/credits and a synthetic Daytona smoke job. Attempt DNSimple sandbox read using an explicitly supplied sandbox token/account/zone. Record actual successes/blockers; a configured key is not proof. No private data uploads or production DNS calls without approval. No searching unrelated secret stores.
-2. FastAPI/Pydantic backend on 127.0.0.1:8317 with exact health/createRun/getRun/artifact/publish/public routes. One bounded in-memory worker pool; job stages truthful; random per-run tokens; idempotency key/payload binding; limits and structured error responses. Read HTTP.md for transport semantics. Document single-process/no persistence behavior. Provide backend/requirements.txt pinned from tested installs and backend/README.md launch/test commands.
-3. Copy the supplied comparator from C:\Users\sangh\SKILL\instagram-follower-diff\scripts\instagram_follower_diff.py to backend/vendor using approved file tools. Read original SKILL.md and methodology.md. Record path/date/SHA-256 provenance in backend/vendor/PROVENANCE.md. Adapt a COPY only. Do not copy private reports, memory or ZIPs into Git. Reuse tests' assertions without automatic deletion-bearing teardown.
-4. Build synthetic ZIP inputs from fixtures/follower-case.json in a new ignored backend/.runtime/<run-id> folder, retained rather than cleaned up. Validate all upload limits and schema. Minimize records before any approved Daytona upload; never send unrelated export content. Always compute the result with real fixed Python worker code, not fixture hardcoded production output.
-5. Implement mandatory audit gate AFTER raw diff. Every comparable candidate gets status/evidence/time/access context. Stable timestamp matching requires asserted consecutive exports, at least one retained valid pair, all retained valid pairs unchanged, uniqueness across both FULL exports and a one-to-one missing/new match. Ambiguity/nonconsecutive/blocked stays unresolved. Qualify timestamp-only identity linkage as an inherited heuristic. Synthetic audit is valid only for the generated sample, never arbitrary uploads. Current activity evidence alone does not resolve a username change. Do not implement unauthenticated scraping, authenticated Instagram fallback or a client endpoint that trusts arbitrary 'verified' statuses.
-6. Acquire bounded live public reference evidence through YouTube official API when configured. Keep URL/platform/observed_at and deterministic descriptive metrics. Otherwise explicit demo/cached mode with truthful source labels, never invented live results. No claim of acceleration from a single observation or of having watched videos from metadata.
-7. Nosana returns limited analysis plan and then three grounded content experiments from anonymized aggregates and provided source IDs. Fixed code executes inside Daytona, renders Markdown and downloads a hash-verified artifact. Validate output schema, source IDs, no invented baseline/count/revenue, distinct experiments and total production time. Store real provider receipts in run.trace. At most one AI JSON repair; never silently substitute a different provider/local computation and label it live.
-8. Implement DNSimple publish separately. Minimum: actual sandbox record create/readback after explicit action. Return public_url=null and sandbox_record_created. Missing config => not_configured. Production disabled by default and must satisfy approval/DNS/TLS/route verification before published. Existing records are not overwritten/deleted. Public sanitized report includes no usernames/private audit/tokens; no publication without consent.
-9. Run contract, diff/audit negative tests, malicious ZIP/input tests, provider failure tests, job token/idempotency tests and artifact hash checks. Support A's actual API integration; do not change v1 to fit an implementation shortcut. First get one full synthetic-input/live-provider vertical slice working; advanced charts, multi-platform collection, database, OAuth and payment are out of scope.
+1. PRE-FLIGHT FIRST. Create backend/.env.example with empty placeholders only. Check official/current Nosana, Daytona, DNSimple and YouTube setup; check only normally supplied environment/config locations. Verify key presence, Nosana model/credit availability, a synthetic Daytona smoke job, and DNSimple sandbox read if an explicit sandbox token/account/zone is supplied. Record actual success/blocker. Key presence is not integration success. No production DNS, purchases or private user data upload without the required consent/approval.
+
+2. Implement FastAPI/Pydantic on 127.0.0.1:8317 for every frozen 1.1.0 route: health/createRun/getRun/report artifact/generic artifact/publish/public report. Bounded in-memory worker pool (<=2 jobs), truthful stages, random per-run tokens, idempotency key/payload binding, upload limits and structured errors. Jobs are process-local/no persistence. Pin tested dependencies in backend/requirements.txt.
+
+3. Copy C:\Users\sangh\SKILL\instagram-follower-diff\scripts\instagram_follower_diff.py into backend/vendor using approved file tools. Read original SKILL.md and methodology.md. Record original path/date/SHA-256 in backend/vendor/PROVENANCE.md. Adapt the COPY only. Do not import private reports/memory/real ZIPs into Git.
+
+4. Generate synthetic ZIP test inputs from fixtures/follower-case.json under a NEW ignored backend/.runtime/<run-id> directory and retain them. Validate schema, file pair, size and archive safety. For approved real cloud uploads, minimize follower records before Daytona; never send unrelated export content.
+
+5. Implement follower audit after raw diff exactly as the frozen contract states. Every comparable candidate gets audit status/evidence/time/access context. Stable timestamp rename matching requires consecutive exports, retained valid timestamp stability and full-export uniqueness. Ambiguous, blocked or nonconsecutive remains unresolved. Current activity evidence alone does not resolve rename. No authenticated Instagram fallback, unauthenticated scraping or arbitrary client-supplied "verified" status.
+
+6. Acquire bounded public reference evidence using YouTube official API when configured. Preserve URL/platform/observed_at and only deterministic descriptive metrics. If unavailable use explicit demo/cached mode with truthful labels. Never invent live evidence, acceleration or video-content analysis from metadata.
+
+7. Nosana pass 1: produce a constrained analysis/strategy plan from anonymized profile/aggregates/source IDs. Nosana receives no follower usernames/fbid/raw ZIPs.
+
+8. Nosana pass 2: produce exactly three schema-valid actions grounded in existing source IDs. Requirements:
+   - at least one SAFE BET exploiting an evidenced fit;
+   - at least one GROWTH EXPERIMENT targeting one named weakness;
+   - distinct hypotheses, not paraphrases;
+   - total production_minutes <= weekly_minutes;
+   - no invented baseline, follower number, probability, revenue or trend ranking;
+   - complete ProductionPackage for EACH action:
+     ScriptPackage: hook/intro/body/ending/cta.
+     ShotList: order/duration_sec/visual/narration/subtitle.
+     EditingPlan: pace/caption_style/cut_plan/music_direction/b_roll_notes.
+     ThumbnailPlan: concept/text/composition/generation_prompt.
+     PublishingPackage: title/description/hashtags/cta/target_metric/posting_notes.
+   Validate output in code. At most one AI JSON repair. Never silently fall back to another model/provider and label it Nosana/live.
+
+9. Daytona: execute fixed safe Python code in a real sandbox for the synthetic/live-provider vertical slice. Deterministic code—not the LLM—computes follower counts, partitions, hashes and final validated serialization. Materialize validated strategy into these actual files where applicable:
+   - report.md
+   - content-strategy.json
+   - script.md
+   - shot-list.json
+   - editing-guide.md
+   - thumbnail-plan.md
+   - publishing-package.md
+   The text files may contain all three actions with clear headings. Download each generated file, verify SHA-256 locally and populate result.artifacts ONLY for files actually produced. Generic artifact endpoint must use a per-run allowlist, not an arbitrary filesystem path.
+
+10. Report generation must include evidence citations, limitations, SAFE BET/GROWTH EXPERIMENT labels and all five Production Package sections. Public/sanitized output contains no follower usernames, private audit rows, bearer tokens or provider secrets. Do not render untrusted model HTML.
+
+11. DNSimple publish stays separate from run success. Minimum sponsor proof: explicit sandbox record creation + readback after user action when configured. Return public_url=null and sandbox_record_created for sandbox. Production remains disabled unless approval, actual DNS resolution, TLS and report route are all verified. Never overwrite/delete conflicting existing records.
+
+12. Tests must cover: contract 1.1.0, exactly three actions, safe+growth presence, growth weakness required, production package completeness, shot order, weekly time budget, invented source rejection, follower-diff/audit negatives, malicious ZIP/input, provider failures, job token/idempotency, generic artifact allowlist, artifact SHA-256 and sanitized publication. Support A's real API integration rather than changing the frozen contract.
+
+13. Priority rule: first complete one full synthetic-input + LIVE Nosana + LIVE Daytona vertical slice with actual production files. Then DNSimple sandbox. Advanced charts, OAuth, payment, databases, multi-platform scraping and automatic posting are out of P0. Do not spend P0 time building a video editor. If actual automatic editing is later added, it requires user-recorded footage, separate media/security constraints and verified media output; never fake it from an editing guide.
 
 ## Required final evidence
 
-Run python -X utf8 -B docs/verify_prep.py; after scoped commit run it with --base contracts-v1 --owner B. Passing this only verifies prep/ownership, not application execution.
+Run python -X utf8 -B docs/verify_prep.py. After backend-only commit run it with --base contracts-v2 --owner B.
 
-Write backend/HANDOFF.md: commit/files, exact run/test commands and outputs, model and provider receipt IDs where available, mock/live/synthetic distinctions, run/output hashes, missing keys/config, security/retention limitations and owned service/sandbox IDs. Stop owned test processes and stop (do not delete) owned Daytona sandboxes where allowed; report anything retained and why. No screenshots of secrets or real relationship lists in public evidence.
+Write backend/HANDOFF.md with:
+- commit and file list;
+- exact launch/test commands and outputs;
+- provider/model names and receipt/remote IDs where available;
+- mock/live/synthetic distinction;
+- Daytona sandbox ID and output hashes;
+- generated production artifact names/hashes;
+- DNSimple state;
+- missing keys/credits/config;
+- security/retention limits and retained runtime files/processes.
 
-Do not report 'MVP complete' until A's frontend sends the real request and downloads the actual Daytona-generated output. If providers are blocked, deliver the working adapters/tests and explicit blockers without pretending the sponsor integration passed. No extra implementation sessions without supervisor authorization.
+Stop owned test processes and stop (do not delete) owned Daytona sandboxes where permitted; report what remains. No screenshots/secrets/real follower lists in public evidence.
+
+Do not report "MVP complete" until Session A's frontend successfully creates a real run, receives the provider-backed result and downloads a Daytona-generated production artifact. If a provider is blocked, deliver working adapters/tests and explicit blockers without pretending sponsor integration passed.

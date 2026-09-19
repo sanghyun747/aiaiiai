@@ -6,7 +6,7 @@ Checked official documentation on 2026-09-19. No provider keys, credits, connect
 
 React/TypeScript/Vite in frontend; Python/FastAPI in backend. One bounded in-memory job runner (one process, at most two jobs); no vector DB, Redis, training, fine-tuning or agent framework. Use and pin currently tested dependency versions. Preserve the Python comparator instead of translating it.
 
-Flow: API validates input -> Nosana allowlisted plan -> Daytona fixed-code analysis -> Nosana evidence-grounded experiment JSON -> Daytona fixed-template Markdown -> API schema/semantic validation -> UI. Acquire public source data in parallel with follower processing where possible. DNSimple publication is separate from the core analysis path.
+Flow: API validates input -> Nosana allowlisted plan -> Daytona fixed-code analysis -> Nosana evidence-grounded SAFE BET/GROWTH EXPERIMENT + complete ProductionPackage JSON -> Daytona fixed-template production artifact generation -> API schema/semantic validation -> UI. Acquire public source data in parallel with follower processing where possible. DNSimple publication is separate from the core analysis path.
 
 Preparation found no DAYTONA_API_KEY, NOSANA_API_KEY, DNSIMPLE_TOKEN or YOUTUBE_API_KEY in the current DevSpace process environment. Keys may exist elsewhere; do not scan credentials, browser profiles, unrelated .env files or password stores. Provide backend/.env.example with empty placeholders. Ask the user to populate secrets locally, not in chat.
 
@@ -20,7 +20,7 @@ Base URL https://inference.nosana.com/v1; Authorization: Bearer <NOSANA_API_KEY>
 
 Plan input contains creator-declared topic, goal, time and allowed task metadata. Recommendation input contains sanitized public source records/IDs and aggregate follower counts. No usernames, fbid, ZIPs, private audit details, run tokens or credentials. External titles are quoted untrusted data, never instructions. Model output is JSON selecting fixed tasks or providing actions; never executable code/shell/URLs to fetch.
 
-Do not assume the selected model supports tool calling or response_format/json_schema; test before enabling. Parse final message.content, not reasoning. Validate with Pydantic/JSON Schema AND semantic invariants. At most one bounded repair; no invented facts. Model cannot overwrite deterministic counts, audit statuses, URLs, traces or hashes. Every experiment cites supplied source IDs and respects the time budget. No success probability, forecast income or causality for individual unfollows.
+Do not assume the selected model supports tool calling or response_format/json_schema; test before enabling. Parse final message.content, not reasoning. Validate with Pydantic/JSON Schema AND semantic invariants. At most one bounded repair; no invented facts. Model cannot overwrite deterministic counts, audit statuses, URLs, traces or hashes. Every experiment cites supplied source IDs and respects the time budget. Successful output contains exactly three actions, at least one SAFE BET and one GROWTH EXPERIMENT. Each action carries script, ordered shot list, editing plan, thumbnail plan and publishing package. Growth experiments target one explicit weakness. No success probability, forecast income or causality for individual unfollows.
 
 Record model, actual provider/request ID when present, response hash, elapsed time and usage when returned. Missing IDs stay null. Do not fabricate receipts. Suggested timeout caps: plan 15s, recommendations 35s, repair 15s; run deadline 120s. Tune from real measurements; these are limits, not latency promises. Error/credit/model failures are visible partial/failed states, never a hidden provider substitution.
 
@@ -32,7 +32,7 @@ Execution: https://www.daytona.io/docs/en/process-code-execution/
 
 Use official Python SDK. Check installed SDK signatures for Daytona/DaytonaConfig, create, fs upload/download, process execution and stop. Run a synthetic smoke test first. Do not invent arguments from memory.
 
-Daytona must actually execute deterministic follower analysis and generate Markdown from a fixed template. Download the output, hash it, record sandbox ID, exit code and duration. A hello-world-only call or locally generated report is not full integration. No free-form model-generated code, arbitrary shell or arbitrary package installation.
+Daytona must actually execute deterministic follower analysis and materialize validated ProductionPackage data into report.md plus production files (content-strategy.json, script.md, shot-list.json, editing-guide.md, thumbnail-plan.md, publishing-package.md) from fixed templates. Download outputs, hash them, record sandbox ID, exit code and duration. A hello-world-only call or locally generated report is not full integration. No free-form model-generated code, arbitrary shell or arbitrary package installation.
 
 Real source ZIPs stay unchanged/unextracted locally. Before any real user-data upload require both operator ALLOW_REAL_UPLOADS and explicit user consent. Default/public demo uses synthetic-only input. Upload only minimized relevant validated records; never unrelated messages, contacts, cookies or export members. Do not upload source ZIPs wholesale.
 
@@ -66,16 +66,16 @@ Production URL is P1 until an owned delegated zone, approved new alias, working 
 
 | Area | Positive | Negative |
 |---|---|---|
-| Contract | fixture and real responses match v1 | misspelled field/unknown source ID rejected |
+| Contract | fixture and real responses match v1.1.0 | misspelled field/unknown source ID rejected |
 | ZIP | two generated valid archives produce fixture counts | one ZIP, oversized/unsafe/encrypted archive, bad JSON/timestamp rejected |
 | Window | earlier records excluded | no current timestamps => controlled error |
 | Rename | consecutive/stable/unique linkage excluded | collision, instability, zero retained evidence, nonconsecutive pair unresolved |
 | Audit | trusted evidence allows conservative absence | shell page/search absence/unknown does not confirm identity or inactivity |
 | Counts | partition arithmetic preserved | model prose cannot change deterministic facts |
 | Sources | real URL/platform/observed_at preserved | one observation cannot imply acceleration; missing remains null |
-| AI | three distinct grounded bounded-time actions | invented URL/baseline/revenue/extra production time rejected |
+| AI | three grounded actions including SAFE BET + GROWTH EXPERIMENT, each with complete ProductionPackage | invented URL/baseline/revenue/extra time, missing weakness or malformed shot order rejected |
 | Nosana | real inference used in result | 401/402/no model/invalid JSON surfaced |
-| Daytona | actual worker and report, matching hash | local-only or hello-world-only cannot pass integration gate |
+| Daytona | actual worker and production artifacts, matching hashes | local-only/hello-world-only/text-only claim cannot pass integration gate |
 | Privacy | no private handles in Nosana/public output | malicious text/HTML cannot execute or leak |
 | Jobs | queue/poll/idempotency/concurrency work | wrong token, altered payload, restart behavior handled |
 | DNS | record create and readback receipt | sandbox not public; conflict never overwritten |

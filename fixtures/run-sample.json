@@ -1,5 +1,5 @@
 {
-  "contract_version": "1.0.0",
+  "contract_version": "1.1.0",
   "run_id": "sample-run-001",
   "status": "succeeded",
   "stage": "done",
@@ -7,41 +7,456 @@
   "created_at": "2026-09-19T13:00:00+09:00",
   "updated_at": "2026-09-19T13:00:05+09:00",
   "trace": [
-    {"provider":"nosana","operation":"recommend","mode":"mock","status":"success","remote_id":null,"executed_at":null,"duration_ms":null,"artifact_sha256":null,"detail":"화면 개발용 예제 응답. 실제 추론 실행 아님."},
-    {"provider":"daytona","operation":"analyze_and_render","mode":"mock","status":"success","remote_id":null,"executed_at":null,"duration_ms":null,"artifact_sha256":"4584bcd0f11dd2ad99171d269ba657d0d57b1525551269bc4f2ff902e96e4b7a","detail":"화면 개발용 합성 결과. 실제 sandbox 실행 아님."},
-    {"provider":"dnsimple","operation":"publish","mode":"mock","status":"skipped","remote_id":null,"executed_at":null,"duration_ms":null,"artifact_sha256":null,"detail":"아직 게시하지 않았습니다."}
+    {
+      "provider": "nosana",
+      "operation": "recommend",
+      "mode": "mock",
+      "status": "success",
+      "remote_id": null,
+      "executed_at": null,
+      "duration_ms": null,
+      "artifact_sha256": null,
+      "detail": "화면 개발용 예제 응답. 실제 추론 실행 아님."
+    },
+    {
+      "provider": "daytona",
+      "operation": "analyze_and_render",
+      "mode": "mock",
+      "status": "success",
+      "remote_id": null,
+      "executed_at": null,
+      "duration_ms": null,
+      "artifact_sha256": "16704d030cb55ed548e009443876fb7eb850b51c9342878e291dc3421e59dc81",
+      "detail": "화면 개발용 합성 결과. 실제 sandbox 실행 아님."
+    },
+    {
+      "provider": "dnsimple",
+      "operation": "publish",
+      "mode": "mock",
+      "status": "skipped",
+      "remote_id": null,
+      "executed_at": null,
+      "duration_ms": null,
+      "artifact_sha256": null,
+      "detail": "아직 게시하지 않았습니다."
+    }
   ],
   "result": {
     "evidence_mode": "synthetic",
     "sample_notice": "합성 예제 데이터 및 mock 응답입니다. 실제 SNS 유행·팔로워·스폰서 실행 결과가 아닙니다.",
     "sources": [
-      {"id":"sample-s1","platform":"synthetic","source_mode":"synthetic","url":null,"title":"예제: 짧은 학습 루틴 소개","published_at":"2026-09-19T01:00:00+09:00","observed_at":"2026-09-19T13:00:00+09:00","views":2400,"note":"합성 수치. 실제 게시물이나 시청한 영상이 아닙니다."},
-      {"id":"sample-s2","platform":"synthetic","source_mode":"synthetic","url":null,"title":"예제: 공부 체크리스트 설명","published_at":"2026-09-18T13:00:00+09:00","observed_at":"2026-09-19T13:00:00+09:00","views":3600,"note":"합성 수치. 실제 인기도를 나타내지 않습니다."},
-      {"id":"sample-s3","platform":"synthetic","source_mode":"synthetic","url":null,"title":"예제: 제작 과정 공유","published_at":"2026-09-19T07:00:00+09:00","observed_at":"2026-09-19T13:00:00+09:00","views":600,"note":"합성 수치. 플랫폼 간 유행을 증명하지 않습니다."}
+      {
+        "id": "sample-s1",
+        "platform": "synthetic",
+        "source_mode": "synthetic",
+        "url": null,
+        "title": "예제: 짧은 학습 루틴 소개",
+        "published_at": "2026-09-19T01:00:00+09:00",
+        "observed_at": "2026-09-19T13:00:00+09:00",
+        "views": 2400,
+        "note": "합성 수치. 실제 게시물이나 시청한 영상이 아닙니다."
+      },
+      {
+        "id": "sample-s2",
+        "platform": "synthetic",
+        "source_mode": "synthetic",
+        "url": null,
+        "title": "예제: 공부 체크리스트 설명",
+        "published_at": "2026-09-18T13:00:00+09:00",
+        "observed_at": "2026-09-19T13:00:00+09:00",
+        "views": 3600,
+        "note": "합성 수치. 실제 인기도를 나타내지 않습니다."
+      },
+      {
+        "id": "sample-s3",
+        "platform": "synthetic",
+        "source_mode": "synthetic",
+        "url": null,
+        "title": "예제: 제작 과정 공유",
+        "published_at": "2026-09-19T07:00:00+09:00",
+        "observed_at": "2026-09-19T13:00:00+09:00",
+        "views": 600,
+        "note": "합성 수치. 플랫폼 간 유행을 증명하지 않습니다."
+      }
     ],
     "opportunities": [
-      {"id":"op-1","title":"학습 루틴을 짧게 설명하는 구성 실험","source_ids":["sample-s1"],"reason":"학습 콘텐츠라는 입력 주제에 맞춘 예시입니다. 상승 추세는 확인되지 않았습니다.","mean_views_per_hour":200,"momentum_evidence":"single_observation"},
-      {"id":"op-2","title":"저장할 만한 체크리스트 구성 실험","source_ids":["sample-s2"],"reason":"실행 자료를 남기는 구성의 가설입니다. 실제 저장 수 데이터는 없습니다.","mean_views_per_hour":150,"momentum_evidence":"single_observation"},
-      {"id":"op-3","title":"과정을 공개하는 콘텐츠 실험","source_ids":["sample-s3"],"reason":"제작 과정 공유가 관심을 유도하는지 확인하는 가설입니다.","mean_views_per_hour":100,"momentum_evidence":"single_observation"}
+      {
+        "id": "op-1",
+        "title": "학습 루틴을 짧게 설명하는 구성 실험",
+        "source_ids": [
+          "sample-s1"
+        ],
+        "reason": "학습 콘텐츠라는 입력 주제에 맞춘 예시입니다. 상승 추세는 확인되지 않았습니다.",
+        "mean_views_per_hour": 200,
+        "momentum_evidence": "single_observation"
+      },
+      {
+        "id": "op-2",
+        "title": "저장할 만한 체크리스트 구성 실험",
+        "source_ids": [
+          "sample-s2"
+        ],
+        "reason": "실행 자료를 남기는 구성의 가설입니다. 실제 저장 수 데이터는 없습니다.",
+        "mean_views_per_hour": 150,
+        "momentum_evidence": "single_observation"
+      },
+      {
+        "id": "op-3",
+        "title": "과정을 공개하는 콘텐츠 실험",
+        "source_ids": [
+          "sample-s3"
+        ],
+        "reason": "제작 과정 공유가 관심을 유도하는지 확인하는 가설입니다.",
+        "mean_views_per_hour": 100,
+        "momentum_evidence": "single_observation"
+      }
     ],
     "followers": {
-      "input_kind":"synthetic", "old_count":7, "current_count":6, "export_count_delta":-1, "retained_count":3,
-      "raw_missing_count":4, "raw_new_count":3, "outside_window_count":1, "renamed_still_following_count":1,
-      "relationship_absent_count":1, "unresolved_count":1, "explicitly_inactive_count":0, "new_observed_excluding_renames":2,
+      "input_kind": "synthetic",
+      "old_count": 7,
+      "current_count": 6,
+      "export_count_delta": -1,
+      "retained_count": 3,
+      "raw_missing_count": 4,
+      "raw_new_count": 3,
+      "outside_window_count": 1,
+      "renamed_still_following_count": 1,
+      "relationship_absent_count": 1,
+      "unresolved_count": 1,
+      "explicitly_inactive_count": 0,
+      "new_observed_excluding_renames": 2,
       "audits": [
-        {"old_username":"tp_old_name","new_username":"tp_new_name","status":"confirmed_rename_still_current_follower","method":"export_continuity","checked_at":"2026-09-19T13:00:00+09:00","access_context":"synthetic_fixture","evidence":["합성 연속 export: 유지된 세 항목의 timestamp 동일; 1700000030은 두 전체 export에서 유일"],"active_evidence":["current_followers"],"relationship_absent":false},
-        {"old_username":"tp_missing","new_username":null,"status":"checked_no_confirmed_rename","method":"synthetic_fixture","checked_at":"2026-09-19T13:00:00+09:00","access_context":"synthetic_fixture","evidence":["합성 예제 전용 수동 검증 기록. 실제 계정에는 적용 금지."],"active_evidence":["current_following"],"relationship_absent":true},
-        {"old_username":"tp_unknown","new_username":null,"status":"username_change_not_ruled_out","method":"unresolved","checked_at":"2026-09-19T13:00:00+09:00","access_context":"synthetic_fixture","evidence":["계정명 변경 여부를 확인할 근거가 없음"],"active_evidence":[],"relationship_absent":false}
+        {
+          "old_username": "tp_old_name",
+          "new_username": "tp_new_name",
+          "status": "confirmed_rename_still_current_follower",
+          "method": "export_continuity",
+          "checked_at": "2026-09-19T13:00:00+09:00",
+          "access_context": "synthetic_fixture",
+          "evidence": [
+            "합성 연속 export: 유지된 세 항목의 timestamp 동일; 1700000030은 두 전체 export에서 유일"
+          ],
+          "active_evidence": [
+            "current_followers"
+          ],
+          "relationship_absent": false
+        },
+        {
+          "old_username": "tp_missing",
+          "new_username": null,
+          "status": "checked_no_confirmed_rename",
+          "method": "synthetic_fixture",
+          "checked_at": "2026-09-19T13:00:00+09:00",
+          "access_context": "synthetic_fixture",
+          "evidence": [
+            "합성 예제 전용 수동 검증 기록. 실제 계정에는 적용 금지."
+          ],
+          "active_evidence": [
+            "current_following"
+          ],
+          "relationship_absent": true
+        },
+        {
+          "old_username": "tp_unknown",
+          "new_username": null,
+          "status": "username_change_not_ruled_out",
+          "method": "unresolved",
+          "checked_at": "2026-09-19T13:00:00+09:00",
+          "access_context": "synthetic_fixture",
+          "evidence": [
+            "계정명 변경 여부를 확인할 근거가 없음"
+          ],
+          "active_evidence": [],
+          "relationship_absent": false
+        }
       ],
-      "scope_note":"원시 누락 4개는 직접 언팔 4명을 뜻하지 않습니다. 내보내기 범위 차이와 계정명 변경을 분리했으며, 관계 부재 원인은 알 수 없습니다. 개수 차이는 검증된 순성장이 아닙니다."
+      "scope_note": "원시 누락 4개는 직접 언팔 4명을 뜻하지 않습니다. 내보내기 범위 차이와 계정명 변경을 분리했으며, 관계 부재 원인은 알 수 없습니다. 개수 차이는 검증된 순성장이 아닙니다."
     },
     "actions": [
-      {"id":"act-1","title":"하나의 학습 루틴을 두 도입부로 소개","source_ids":["sample-s1"],"fit_reason":"학습 주제와 간단한 촬영 조건에 맞춘 예시 실험입니다.","hook_a":"공부를 시작하기 전에 이 순서부터 정리해 봤습니다.","hook_b":"오늘 공부 준비에서 바꾼 한 가지를 보여드립니다.","outline":["도입부 A/B 중 하나 선택","준비 순서를 세 장면으로 촬영","실제로 달라진 점과 한계를 설명"],"caption":"오늘 시도한 학습 준비 루틴. 효과는 직접 기록해 비교하겠습니다.","production_minutes":30,"cta":"다음 비교 기록을 보려면 팔로우하세요.","monetization_hypothesis":"유용한 시리즈에 대한 반복 수요를 확인한 뒤 자체 자료 제공 가능성을 검토합니다.","metric":"게시 후 72시간 조회수 및 사용자가 확인한 팔로우 전환","baseline":null,"measurement_window_hours":72,"success_rule":"비슷한 주제·형식의 기존 게시물 기준값을 먼저 기록하고 같은 관측 기간으로 비교합니다. 증가를 보장하지 않습니다."},
-      {"id":"act-2","title":"내가 쓰는 공부 체크리스트를 설명","source_ids":["sample-s2"],"fit_reason":"제작 시간을 제한하면서 실제로 활용할 수 있는 자료를 보여주는 구성입니다.","hook_a":"공부 시작 전에 확인하는 세 가지입니다.","hook_b":"준비가 길어질 때 이 목록으로 정리합니다.","outline":["직접 만든 체크리스트 화면","각 항목을 쓰는 이유 설명","자료를 요청하는 방법 안내"],"caption":"직접 만든 체크리스트입니다. 본인 상황에 맞게 바꿔 사용하세요.","production_minutes":30,"cta":"자료가 필요한 경우 프로필의 안내 페이지를 확인하세요.","monetization_hypothesis":"자료 문의를 수집해 무료/유료 자료 수요를 검증합니다. 결제나 수익은 아직 발생하지 않았습니다.","metric":"사용자가 기록한 자료 문의 수","baseline":null,"measurement_window_hours":72,"success_rule":"먼저 기준 기간의 문의 수를 수집합니다. 문의 증가와 실제 매출을 구분합니다."},
-      {"id":"act-3","title":"콘텐츠를 만드는 과정을 짧게 공유","source_ids":["sample-s3"],"fit_reason":"새 장비 없이 기존 작업 과정을 기록하는 예시입니다.","hook_a":"짧은 영상 하나를 이렇게 준비합니다.","hook_b":"완성 영상 대신 이번에는 만드는 과정을 보여드립니다.","outline":["준비 과정 한 장면","잘 되지 않은 부분과 수정","완성 결과와 다음 실험 예고"],"caption":"이번 제작 과정과 다음에 바꿔볼 점을 기록했습니다.","production_minutes":30,"cta":"다음 과정에서 궁금한 점을 남겨 주세요.","monetization_hypothesis":"관심 주제에 대한 수요를 관찰하고 향후 협업 문의용 포트폴리오 자료로 활용할지 검토합니다.","metric":"게시 후 72시간 조회수와 의미 있는 문의 수","baseline":null,"measurement_window_hours":72,"success_rule":"동일 기간의 기존 콘텐츠와 비교할 기준값을 먼저 확보합니다. 인과 효과는 단정하지 않습니다."}
+      {
+        "id": "act-1",
+        "title": "하나의 학습 루틴을 두 도입부로 소개",
+        "source_ids": [
+          "sample-s1"
+        ],
+        "fit_reason": "학습 주제와 간단한 촬영 조건에 맞춘 예시 실험입니다.",
+        "hook_a": "공부를 시작하기 전에 이 순서부터 정리해 봤습니다.",
+        "hook_b": "오늘 공부 준비에서 바꾼 한 가지를 보여드립니다.",
+        "outline": [
+          "도입부 A/B 중 하나 선택",
+          "준비 순서를 세 장면으로 촬영",
+          "실제로 달라진 점과 한계를 설명"
+        ],
+        "caption": "오늘 시도한 학습 준비 루틴. 효과는 직접 기록해 비교하겠습니다.",
+        "production_minutes": 30,
+        "cta": "다음 비교 기록을 보려면 팔로우하세요.",
+        "monetization_hypothesis": "유용한 시리즈에 대한 반복 수요를 확인한 뒤 자체 자료 제공 가능성을 검토합니다.",
+        "metric": "게시 후 72시간 조회수 및 사용자가 확인한 팔로우 전환",
+        "baseline": null,
+        "measurement_window_hours": 72,
+        "success_rule": "비슷한 주제·형식의 기존 게시물 기준값을 먼저 기록하고 같은 관측 기간으로 비교합니다. 증가를 보장하지 않습니다.",
+        "strategy_mode": "safe_bet",
+        "weakness_target": null,
+        "production_package": {
+          "script": {
+            "hook": "공부를 시작하기 전에 이 순서부터 정리해 봤습니다.",
+            "intro": "준비 시간이 길어질수록 실제 공부 시작이 늦어져서, 오늘은 세 단계로 줄여봤습니다.",
+            "body": [
+              "책상 위에 필요한 것만 남깁니다.",
+              "오늘 할 일을 한 줄로 정합니다.",
+              "바로 10분 타이머를 시작합니다."
+            ],
+            "ending": "효과는 느낌으로 판단하지 않고 같은 시간대의 다음 기록과 비교해 보겠습니다.",
+            "cta": "다음 비교 기록을 보려면 팔로우하세요."
+          },
+          "shot_list": [
+            {
+              "order": 1,
+              "duration_sec": 4,
+              "visual": "정리 전 책상과 타이머를 한 프레임에 촬영",
+              "narration": "공부를 시작하기 전에 이 순서부터 정리해 봤습니다.",
+              "subtitle": "시작 전 3단계"
+            },
+            {
+              "order": 2,
+              "duration_sec": 12,
+              "visual": "책상 정리→할 일 한 줄 작성→타이머 시작을 각각 짧게 촬영",
+              "narration": "필요한 것만 남기고, 오늘 할 일을 한 줄로 정한 다음 바로 타이머를 켭니다.",
+              "subtitle": "정리 → 한 줄 계획 → 10분 시작"
+            },
+            {
+              "order": 3,
+              "duration_sec": 8,
+              "visual": "타이머가 돌아가는 화면과 실제 공부 장면",
+              "narration": "이게 실제 시작 시간을 줄이는지는 다음 기록과 같은 조건으로 비교하겠습니다.",
+              "subtitle": "결과는 다음 기록으로 검증"
+            }
+          ],
+          "editing_plan": {
+            "pace": "첫 4초는 결과를 먼저 보여주고 이후 2~4초 단위로 빠르게 컷 전환",
+            "caption_style": "핵심 행동만 짧은 한 줄 자막으로 표시",
+            "cut_plan": "정리 전/후 대비 후 세 단계를 점프컷으로 연결",
+            "music_direction": "말을 방해하지 않는 낮은 볼륨의 리듬감 있는 배경음 방향",
+            "b_roll_notes": [
+              "타이머 클로즈업",
+              "한 줄 계획 손글씨",
+              "정리 전/후 비교"
+            ]
+          },
+          "thumbnail_plan": {
+            "concept": "정리 전 책상과 10분 타이머를 대비시키는 단순한 구성",
+            "text": "공부 시작 전 3단계",
+            "composition": "왼쪽 정리 전, 오른쪽 타이머/정리 후. 텍스트는 상단 한 줄.",
+            "generation_prompt": "세로 숏폼 썸네일 참고 시안. 실제 사람 얼굴 없이 책상 정리 전후와 10분 타이머가 명확히 보이는 깔끔한 생산성 콘텐츠 구성."
+          },
+          "publishing_package": {
+            "title": "공부 시작이 늦어질 때 쓰는 3단계",
+            "description": "준비 시간을 줄이기 위해 오늘부터 세 단계만 남겨봤습니다. 효과는 같은 조건의 다음 기록과 비교합니다.",
+            "hashtags": [
+              "#공부루틴",
+              "#생산성",
+              "#공부기록"
+            ],
+            "cta": "다음 비교 기록을 보려면 팔로우하세요.",
+            "target_metric": "72시간 조회수와 사용자가 확인한 팔로우 전환",
+            "posting_notes": "기존 게시물과 같은 관측 기간을 사용하고, 첫 3초 유지율을 확인할 수 있으면 별도 기록합니다."
+          }
+        }
+      },
+      {
+        "id": "act-2",
+        "title": "내가 쓰는 공부 체크리스트를 설명",
+        "source_ids": [
+          "sample-s2"
+        ],
+        "fit_reason": "제작 시간을 제한하면서 실제로 활용할 수 있는 자료를 보여주는 구성입니다.",
+        "hook_a": "공부 시작 전에 확인하는 세 가지입니다.",
+        "hook_b": "준비가 길어질 때 이 목록으로 정리합니다.",
+        "outline": [
+          "직접 만든 체크리스트 화면",
+          "각 항목을 쓰는 이유 설명",
+          "자료를 요청하는 방법 안내"
+        ],
+        "caption": "직접 만든 체크리스트입니다. 본인 상황에 맞게 바꿔 사용하세요.",
+        "production_minutes": 30,
+        "cta": "자료가 필요한 경우 프로필의 안내 페이지를 확인하세요.",
+        "monetization_hypothesis": "자료 문의를 수집해 무료/유료 자료 수요를 검증합니다. 결제나 수익은 아직 발생하지 않았습니다.",
+        "metric": "사용자가 기록한 자료 문의 수",
+        "baseline": null,
+        "measurement_window_hours": 72,
+        "success_rule": "먼저 기준 기간의 문의 수를 수집합니다. 문의 증가와 실제 매출을 구분합니다.",
+        "strategy_mode": "safe_bet",
+        "weakness_target": null,
+        "production_package": {
+          "script": {
+            "hook": "공부 시작 전에 확인하는 세 가지입니다.",
+            "intro": "준비할 때마다 빠뜨리는 항목이 달라서 체크리스트를 하나로 묶었습니다.",
+            "body": [
+              "오늘 목표가 한 문장인지 확인합니다.",
+              "필요한 자료가 열려 있는지 확인합니다.",
+              "끝나는 시간을 먼저 정합니다."
+            ],
+            "ending": "이 목록이 유용한지는 저장과 자료 문의를 따로 기록해 보겠습니다.",
+            "cta": "필요하면 프로필의 자료 안내를 확인하세요."
+          },
+          "shot_list": [
+            {
+              "order": 1,
+              "duration_sec": 4,
+              "visual": "체크리스트 전체 화면을 먼저 보여줌",
+              "narration": "공부 시작 전에 확인하는 세 가지입니다.",
+              "subtitle": "시작 전 체크리스트"
+            },
+            {
+              "order": 2,
+              "duration_sec": 15,
+              "visual": "세 항목을 하나씩 확대해 보여줌",
+              "narration": "목표 한 문장, 필요한 자료, 끝나는 시간을 순서대로 확인합니다.",
+              "subtitle": "목표 / 자료 / 종료시간"
+            },
+            {
+              "order": 3,
+              "duration_sec": 7,
+              "visual": "체크가 끝난 화면과 실제 시작 장면",
+              "narration": "저장이나 자료 문의가 실제로 생기는지 같은 기간으로 기록하겠습니다.",
+              "subtitle": "저장·문의로 검증"
+            }
+          ],
+          "editing_plan": {
+            "pace": "목록을 빠르게 훑고 항목당 4~5초 유지",
+            "caption_style": "체크박스와 짧은 키워드 중심 자막",
+            "cut_plan": "전체 목록→항목 확대→완료 화면의 3단 구조",
+            "music_direction": "정보 전달을 방해하지 않는 단순한 배경음 방향",
+            "b_roll_notes": [
+              "체크 표시 애니메이션 참고 컷",
+              "완료된 목록",
+              "공부 시작 장면"
+            ]
+          },
+          "thumbnail_plan": {
+            "concept": "세 개 체크박스가 크게 보이는 저장형 정보 콘텐츠",
+            "text": "공부 전 꼭 확인 3개",
+            "composition": "체크리스트를 중앙에 크게 배치하고 텍스트는 위쪽",
+            "generation_prompt": "세로 숏폼 썸네일 참고 시안. 세 개의 체크박스가 명확하고 저장하고 싶은 정보성 콘텐츠처럼 보이는 깔끔한 레이아웃."
+          },
+          "publishing_package": {
+            "title": "공부 시작 전 확인하는 체크리스트 3개",
+            "description": "준비 시간이 길어질 때 실제로 쓰는 세 항목을 정리했습니다. 본인 상황에 맞게 바꿔 사용하세요.",
+            "hashtags": [
+              "#공부체크리스트",
+              "#공부팁",
+              "#생산성"
+            ],
+            "cta": "자료가 필요한 경우 프로필 안내를 확인하세요.",
+            "target_metric": "72시간 저장·자료 문의 수",
+            "posting_notes": "문의 증가와 실제 매출은 분리해 기록합니다."
+          }
+        }
+      },
+      {
+        "id": "act-3",
+        "title": "콘텐츠를 만드는 과정을 짧게 공유",
+        "source_ids": [
+          "sample-s3"
+        ],
+        "fit_reason": "새 장비 없이 기존 작업 과정을 기록하는 예시입니다.",
+        "hook_a": "짧은 영상 하나를 이렇게 준비합니다.",
+        "hook_b": "완성 영상 대신 이번에는 만드는 과정을 보여드립니다.",
+        "outline": [
+          "준비 과정 한 장면",
+          "잘 되지 않은 부분과 수정",
+          "완성 결과와 다음 실험 예고"
+        ],
+        "caption": "이번 제작 과정과 다음에 바꿔볼 점을 기록했습니다.",
+        "production_minutes": 30,
+        "cta": "다음 과정에서 궁금한 점을 남겨 주세요.",
+        "monetization_hypothesis": "관심 주제에 대한 수요를 관찰하고 향후 협업 문의용 포트폴리오 자료로 활용할지 검토합니다.",
+        "metric": "게시 후 72시간 조회수와 의미 있는 문의 수",
+        "baseline": null,
+        "measurement_window_hours": 72,
+        "success_rule": "동일 기간의 기존 콘텐츠와 비교할 기준값을 먼저 확보합니다. 인과 효과는 단정하지 않습니다.",
+        "strategy_mode": "growth_experiment",
+        "weakness_target": "opening_hook",
+        "production_package": {
+          "script": {
+            "hook": "완성 영상보다 만드는 과정이 더 궁금한지 테스트해 보겠습니다.",
+            "intro": "이번에는 결과부터 자랑하는 대신 만드는 중간 과정을 짧게 공개합니다.",
+            "body": [
+              "처음 잡은 구성 하나를 보여줍니다.",
+              "잘 안 된 부분을 한 가지 공개합니다.",
+              "수정한 결과를 바로 비교합니다."
+            ],
+            "ending": "다음 영상에서는 첫 3초 도입부를 바꿔 같은 방식으로 비교하겠습니다.",
+            "cta": "다음 실험에서 궁금한 점을 댓글로 남겨 주세요."
+          },
+          "shot_list": [
+            {
+              "order": 1,
+              "duration_sec": 4,
+              "visual": "완성본 한 컷과 작업 화면을 빠르게 교차",
+              "narration": "완성 영상보다 만드는 과정이 더 궁금한지 테스트해 보겠습니다.",
+              "subtitle": "과정 공개 실험"
+            },
+            {
+              "order": 2,
+              "duration_sec": 14,
+              "visual": "초안→문제 장면→수정 장면",
+              "narration": "처음 구성에서 막힌 부분 하나와 실제로 바꾼 장면을 보여드립니다.",
+              "subtitle": "초안 → 문제 → 수정"
+            },
+            {
+              "order": 3,
+              "duration_sec": 8,
+              "visual": "수정 전후 비교와 다음 실험 메모",
+              "narration": "반응을 보고 다음에는 첫 3초 훅을 더 강하게 바꿔보겠습니다.",
+              "subtitle": "다음 실험: 첫 3초"
+            }
+          ],
+          "editing_plan": {
+            "pace": "첫 4초에 결과/과정을 교차하고 이후 문제-수정 대비를 명확히 유지",
+            "caption_style": "실패/수정 포인트를 짧은 키워드로 강조",
+            "cut_plan": "완성 컷→초안→실패→수정→전후 비교",
+            "music_direction": "과정의 긴장감을 살리되 내레이션이 우선인 배경음 방향",
+            "b_roll_notes": [
+              "초안 메모",
+              "실패 장면 확대",
+              "수정 전후 스플릿"
+            ]
+          },
+          "thumbnail_plan": {
+            "concept": "초안과 수정본의 차이를 한눈에 보여주는 과정형 썸네일",
+            "text": "이렇게 고쳤습니다",
+            "composition": "좌측 초안, 우측 수정본, 중앙에 짧은 화살표",
+            "generation_prompt": "세로 숏폼 썸네일 참고 시안. 콘텐츠 제작 초안과 수정본을 좌우로 비교하고 중앙에 변화가 명확히 보이는 과정 공개형 구성."
+          },
+          "publishing_package": {
+            "title": "짧은 영상 하나를 만들면서 실제로 고친 것",
+            "description": "완성본만 보여주는 대신 초안에서 막힌 부분과 수정 과정을 공개했습니다. 다음에는 첫 3초 훅을 바꿔 비교합니다.",
+            "hashtags": [
+              "#콘텐츠제작",
+              "#크리에이터",
+              "#성장실험"
+            ],
+            "cta": "다음 실험에서 궁금한 점을 댓글로 남겨 주세요.",
+            "target_metric": "72시간 조회수·댓글·첫 3초 유지율(제공되는 경우)",
+            "posting_notes": "기존 콘텐츠와 동일 관측 기간으로 비교하고 한 번의 결과를 일반화하지 않습니다."
+          }
+        }
+      }
     ],
-    "limitations": ["모든 게시물·계정·수치는 합성 예제입니다.","팔로워 ZIP은 콘텐츠 성과나 이탈 원인을 제공하지 않습니다.","한 번의 관측으로 상승 가속이나 미래 유행을 예측하지 않습니다.","조회수·팔로워·수익 증가를 보장하지 않습니다."],
-    "artifacts": [{"name":"report.md","path":"/api/v1/runs/sample-run-001/artifacts/report.md","sha256":"4584bcd0f11dd2ad99171d269ba657d0d57b1525551269bc4f2ff902e96e4b7a"}]
+    "limitations": [
+      "모든 게시물·계정·수치는 합성 예제입니다.",
+      "팔로워 ZIP은 콘텐츠 성과나 이탈 원인을 제공하지 않습니다.",
+      "한 번의 관측으로 상승 가속이나 미래 유행을 예측하지 않습니다.",
+      "조회수·팔로워·수익 증가를 보장하지 않습니다."
+    ],
+    "artifacts": [
+      {
+        "name": "report.md",
+        "path": "/api/v1/runs/sample-run-001/artifacts/report.md",
+        "sha256": "16704d030cb55ed548e009443876fb7eb850b51c9342878e291dc3421e59dc81"
+      }
+    ]
   },
   "error": null
 }

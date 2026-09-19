@@ -1,4 +1,4 @@
-# Frozen HTTP and semantic contract — v1.0.0
+# Frozen HTTP and semantic contract — v1.1.0
 
 Authority: v1.openapi.json. Do not change it from an executor branch. JSON field names are snake_case, times are RFC3339 with an explicit offset, and null means unavailable, not zero. UI labels/content are Korean.
 
@@ -14,6 +14,7 @@ A stores base URL configuration only in frontend/.env.example. B stores secrets 
 | POST /api/v1/runs | multipart profile_json + optional old_export/current_export; Idempotency-Key: fresh random UUID | 202 Accepted |
 | GET /api/v1/runs/{run_id} | Authorization: Bearer access_token | 200 Run; poll every 1500ms, stop at succeeded/partial/failed |
 | GET /api/v1/runs/{run_id}/artifacts/report.md | same per-run bearer token | 200 text/markdown; Content-Disposition attachment; fetch blob, then offer save |
+| GET /api/v1/runs/{run_id}/artifacts/{artifact_name} | same per-run bearer token | Download a generated production artifact listed in Result.artifacts; never arbitrary host paths |
 | POST /api/v1/runs/{run_id}/publish | same bearer, PublishRequest JSON | 200 Publication; status distinguishes sandbox and public success |
 | GET /p/{public_token} | unguessable public token created only by explicit publish | 200 sanitized text/html; otherwise 404 |
 
@@ -41,6 +42,12 @@ A single observation only supports momentum_evidence=single_observation or insuf
 
 LLM output cannot manufacture follower counts, observations, sources, success probabilities, revenue, baseline or sponsorship eligibility. Sum(action.production_minutes) <= profile.weekly_minutes. An unknown baseline stays null and success_rule asks the user to collect a comparable baseline. Each action includes a distinct testable proposition; duplicate wording is not three experiments.
 
+Every successful run returns exactly three actions and must contain at least one strategy_mode=safe_bet and one strategy_mode=growth_experiment. A growth_experiment targets exactly one named weakness through weakness_target; a safe_bet may leave weakness_target null. strategy_mode is a product strategy label, not a predicted performance guarantee.
+
+Each action carries a complete production_package: script, ordered shot_list, editing_plan, thumbnail_plan and publishing_package. This is the system's "shooting excluded" production handoff: it decides what to say, what to film, how to assemble/edit it, how the thumbnail should look, and how to package the post. The MVP does NOT claim to have physically filmed footage. It also must not claim to have rendered a finished video unless a separate real video-rendering path actually ran and produced a verified media artifact. Textual editing instructions are not equivalent to automatic video editing.
+
+Production copy must remain grounded in the action's source_ids and user profile. Hashtags, titles and thumbnail copy are hypotheses to test, not guarantees of reach. Music direction must be descriptive only; do not bundle copyrighted audio or imply licensing.
+
 ## Follower invariants
 
 Reuse the source skill's deterministic diff. Add a separate mandatory audit layer and do not expose the source script's preliminary Markdown as a final report.
@@ -57,7 +64,9 @@ Without a positive stable-ID/public manual audit, a missing handle stays usernam
 
 ## Report/publication constraints
 
-Private run JSON may include audited usernames only behind its per-run token. Nosana requests contain no handles. Downloaded Markdown and public HTML are generated from an allowlist of aggregate statistics, source citations, actions and limitations, not by dumping raw JSON. Escape HTML; do not render arbitrary model HTML, scripts or raw markdown HTML.
+Private run JSON may include audited usernames only behind its per-run token. Nosana requests contain no handles. Downloaded Markdown and public HTML are generated from an allowlist of aggregate statistics, source citations, actions, production packages and limitations, not by dumping raw JSON. Escape HTML; do not render arbitrary model HTML, scripts or raw markdown HTML.
+
+Daytona should materialize the three validated production packages into safe generated artifacts such as content-strategy.json, script.md, shot-list.json, editing-guide.md, thumbnail-plan.md and publishing-package.md in addition to report.md. Result.artifacts may list only files that actually exist and whose sha256 has been verified after download. Artifact download accepts only names present in the run's allowlisted artifact registry; it must never become a general filesystem read endpoint.
 
 DNSimple sandbox results have environment=sandbox, status=sandbox_record_created, public_url=null. Production remains dns_pending until the new record is verified, the actual hostname resolves, TLS is valid and the report route returns the intended sanitized content. A CNAME targets a hostname only, never a URL path. Existing records must not be overwritten or deleted. A record that conflicts with the expected target is an error requiring review.
 

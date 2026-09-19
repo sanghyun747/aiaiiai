@@ -118,6 +118,17 @@ def check_result(run: dict, document: dict, profile: dict, seed: dict) -> None:
     for item in result["actions"] + result["opportunities"]:
         require(set(item["source_ids"]).issubset(source_ids), "unknown source reference")
     require(len(result["actions"]) == 3, "sample needs exactly three experiments")
+    modes = {a["strategy_mode"] for a in result["actions"]}
+    require("safe_bet" in modes and "growth_experiment" in modes, "sample must include safe bet and growth experiment")
+    for action in result["actions"]:
+        package = action["production_package"]
+        require(package["script"]["hook"].strip() != "", "production script hook missing")
+        require(len(package["shot_list"]) >= 1, "shot list missing")
+        require([shot["order"] for shot in package["shot_list"]] == list(range(1, len(package["shot_list"]) + 1)), "shot order must be consecutive")
+        require(all(shot["duration_sec"] > 0 for shot in package["shot_list"]), "invalid shot duration")
+        require(package["publishing_package"]["title"].strip() != "", "publishing title missing")
+        if action["strategy_mode"] == "growth_experiment":
+            require(bool(action["weakness_target"]), "growth experiment must target one weakness")
     require(sum(a["production_minutes"] for a in result["actions"]) <= profile["weekly_minutes"], "production budget exceeded")
     require(all(a["baseline"] is None for a in result["actions"]), "sample baseline invented")
     f = result["followers"]
@@ -167,7 +178,7 @@ def main() -> int:
         require(all((ROOT / p).is_file() for p in required), "required preparation file missing")
         checks.append("required_files")
         document = load("contracts/v1.openapi.json")
-        require(document["info"]["version"] == "1.0.0", "contract version mismatch")
+        require(document["info"]["version"] == "1.1.0", "contract version mismatch")
         references(document, document)
         checks.append("internal_schema_references")
         profile = load("fixtures/profile-sample.json")
@@ -183,6 +194,9 @@ def main() -> int:
         bad = copy.deepcopy(sample); bad["result"]["followers"]["audits"][0]["relationship_absent"] = True; mutations.append(("rename_as_loss", bad))
         bad = copy.deepcopy(sample); bad["trace"][0]["mode"] = "live"; mutations.append(("fake_live_trace", bad))
         bad = copy.deepcopy(sample); bad["result"]["actions"][0]["production_minutes"] = 1200; mutations.append(("over_budget", bad))
+        bad = copy.deepcopy(sample); bad["result"]["actions"][2]["strategy_mode"] = "safe_bet"; mutations.append(("missing_growth_experiment", bad))
+        bad = copy.deepcopy(sample); bad["result"]["actions"][2]["weakness_target"] = None; mutations.append(("growth_without_weakness", bad))
+        bad = copy.deepcopy(sample); bad["result"]["actions"][0]["production_package"]["shot_list"][0]["order"] = 2; mutations.append(("bad_shot_order", bad))
         bad = copy.deepcopy(sample); bad["result"]["artifacts"][0]["sha256"] = "0" * 64; mutations.append(("wrong_artifact_hash", bad))
         for name, mutated in mutations:
             rejected = False
