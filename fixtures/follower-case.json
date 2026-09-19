@@ -1,0 +1,28 @@
+{
+  "synthetic_only": true,
+  "notice": "Fictitious handles and records for deterministic tests. Do not visit these handles or apply this audit to any real account.",
+  "pair_is_consecutive": true,
+  "old_followers": [
+    {"username":"tp_outside_window","timestamp":1699999900},
+    {"username":"tp_retained_a","timestamp":1700000000},
+    {"username":"tp_retained_b","timestamp":1700000010},
+    {"username":"tp_retained_c","timestamp":1700000020},
+    {"username":"tp_old_name","timestamp":1700000030},
+    {"username":"tp_missing","timestamp":1700000040},
+    {"username":"tp_unknown","timestamp":1700000050}
+  ],
+  "current_followers": [
+    {"username":"tp_retained_a","timestamp":1700000000},
+    {"username":"tp_retained_b","timestamp":1700000010},
+    {"username":"tp_retained_c","timestamp":1700000020},
+    {"username":"tp_new_name","timestamp":1700000030},
+    {"username":"tp_new_observed_a","timestamp":1700000060},
+    {"username":"tp_new_observed_b","timestamp":1700000070}
+  ],
+  "old_following": [],
+  "current_following": [{"username":"tp_missing","timestamp":1700000040}],
+  "old_recently_unfollowed": [],
+  "current_recently_unfollowed": [],
+  "trusted_synthetic_audit": [{"old_username":"tp_missing","status":"checked_no_confirmed_rename","method":"synthetic_fixture","access_context":"synthetic_fixture","evidence":["Synthetic evidence only; never reuse for a real upload."]}],
+  "expected": {"old_count":7,"current_count":6,"retained_count":3,"raw_missing_count":4,"raw_new_count":3,"outside_window_count":1,"renamed_still_following_count":1,"relationship_absent_count":1,"unresolved_count":1,"explicitly_inactive_count":0,"new_observed_excluding_renames":2,"export_count_delta":-1}
+}

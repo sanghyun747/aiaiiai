@@ -1,0 +1,12 @@
+{
+  "niche": "학습과 생산성",
+  "audience": "공부 루틴을 기록하는 대학생 크리에이터",
+  "goal": "followers",
+  "format": "instagram_reel",
+  "weekly_minutes": 120,
+  "query": "공부 루틴",
+  "data_mode": "demo",
+  "sample_followers": true,
+  "pair_is_consecutive": true,
+  "cloud_processing_consent": false
+}
